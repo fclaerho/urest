@@ -1,11 +1,8 @@
-REST
-====
-
 REST Framework for Python.
+
 Built as a Bottle wrapper implementing REST design recommended practices.
 
-How-to
-------
+Usage:
 
   * Import the module
   * Implement the Model() base class for each of your resources
@@ -13,8 +10,7 @@ How-to
   * Register() each URL path againts a resource instance
   * Call server() on the API instance.
 
-Example
--------
+Example:
 
 	import rest
 	class About(rest.Model):
