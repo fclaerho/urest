@@ -3,10 +3,11 @@ built as a Bottle wrapper implementing REST design recommended practices:
   - HTTP verbs
   - Status code
 
-**NOTE**
+**DEPENDENCY**
+
 Of course you'll need bottle as dependency (it's a single-file module.)
 
-— USAGE —
+**USAGE**
 
   - `import rest`
   - Implement the `Model()` base class for each of your resources
@@ -15,7 +16,7 @@ Of course you'll need bottle as dependency (it's a single-file module.)
   - Call `serve()` on the API instance.
   - Connect to your endpoint at localhost:8080 (default)
 
-— EXAMPLE —
+**EXAMPLE**
 
 	import rest
 	class About(rest.Model):
