@@ -1,16 +1,8 @@
-# copyright (c) 2014 fclaerhout.fr, released under the MIT license.
+# copyright (c) 2014-2015 fclaerhout.fr, released under the MIT license.
 
-"""
-Bottle wrapper implementing REST design recommended practices.
+"Bottle wrapper implementing REST design recommended practices"
 
-Usage:
-  * implement Model for each resource
-  * instanciate Api
-  * register() each path against a model instance
-  * serve() the API.
-"""
-
-__version__ = "20150107-1"
+__version__ = "20150108-1"
 
 import unittest, json, abc
 
