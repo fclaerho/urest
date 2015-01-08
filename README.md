@@ -30,8 +30,8 @@ Of course you'll need Bottle as dependency (it's a single-file module.)
   - `import rest`
   - Implement the `Model()` base class for each of your resources
   - Instantiate an `Api()`
-  - `Register()` each URL path againts a resource instance
-  - Call `serve()` on the API instance.
+  - `register()` each URL path againts a resource instance
+  - `serve()` the API (accept a custom interface and port)
   - Connect to your endpoint at localhost:8080 (default)
 
 **EXAMPLE**
