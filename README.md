@@ -12,8 +12,6 @@ Of course you'll need Bottle as dependency (it's a single-file module.)
   * 409: Resource exists
   * 404: No such resource
   * 501: Not implemented
-  * 401: Authentication required
-  * 403: Forbidden
 
 **HTTP CRUD**
 
