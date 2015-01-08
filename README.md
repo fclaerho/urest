@@ -46,7 +46,7 @@ Of course you'll need Bottle as dependency (it's a single-file module.)
 			raise NotImplementedError("cannot update")
 		def delete(self, body):
 			raise NotImplementedError("cannot delete")
-	api = Api()
+	api = rest.Api()
 	api.register("/about", About())
 	api.serve()
 
