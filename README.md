@@ -3,7 +3,7 @@ REST Framework for Python.
 Built as a Bottle wrapper implementing REST design recommended practices.
 Of course you'll need bottle as dependency (it's a single-file module.)
 
-*USAGE*
+__USAGE__
 
   * Import the module
   * Implement the Model() base class for each of your resources
@@ -12,7 +12,7 @@ Of course you'll need bottle as dependency (it's a single-file module.)
   * Call serve() on the API instance.
   * Connect to your endpoint at localhost:8080 (default)
 
-*EXAMPLE*
+__EXAMPLE__
 
 	import rest
 	class About(rest.Model):
