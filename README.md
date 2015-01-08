@@ -1,18 +1,22 @@
-REST Framework for Python.
+# Tiny REST Framework for Python
 
-Built as a Bottle wrapper implementing REST design recommended practices.
+Built as a Bottle wrapper implementing REST design recommended practices:
+
+  - HTTP verbs
+  - Status code
+
 Of course you'll need bottle as dependency (it's a single-file module.)
 
-__USAGE__
+### USAGE ###
 
-  * Import the module
-  * Implement the Model() base class for each of your resources
-  * Instantiate an Api()
-  * Register() each URL path againts a resource instance
-  * Call serve() on the API instance.
-  * Connect to your endpoint at localhost:8080 (default)
+  - Import the module
+  - Implement the Model() base class for each of your resources
+  - Instantiate an Api()
+  - Register() each URL path againts a resource instance
+  - Call serve() on the API instance.
+  - Connect to your endpoint at localhost:8080 (default)
 
-__EXAMPLE__
+### EXAMPLE ###
 
 	import rest
 	class About(rest.Model):
