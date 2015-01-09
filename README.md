@@ -4,8 +4,8 @@ Of course you'll need Bottle as dependency (it's a single-file module.)
 
 **HTTP STATUS CODES**
 
-  * 201: Successful creation
-  * 204: Idem, empty response
+  * 201: Successful resource creation
+  * 204: Idem, empty response body
   * 406: Unsupported output formats (Accept header)
   * 415: Unsupported input formats (Content-Type header)
   * 422: Invalid input
@@ -13,22 +13,33 @@ Of course you'll need Bottle as dependency (it's a single-file module.)
   * 404: No such resource
   * 501: Not implemented
 
+**I/O FORMAT**
+
+At the moment, two formats are supported: `application/json` and `application/xml`
+  * The HTTP `Content-Type` header defines the request body format
+  * The HTTP `Accept` header defines the response body formats
+
 **HTTP CRUD**
 
-  * Selection: GET /%resource%s?[&fields=][&limit=][&offset=][&name=]
-  * Creation: POST /%resource%s and body contains the payload
+  * Selection: GET /%resource%s?[&fields=][&limit=][&offset=]…
+  * Creation:
+    POST /%resource%s and body contains the payload
+    On successful creation, the response `Location` header is set
   * Update: PUT /%resource%s and body contains the payload
   * Deletion: DELETE /%resource%s {"name": %string%}
 
-**RESPONSE FORMAT**
+**RESPONSE BODY STRUCTURE**
 
-  * On success: {"success": true, "result": …}
+In JSON (equivalent in XML):
+  * On success: {"success": true, "result": %any%}
   * On failure: {"success": false, "exception": %string%}
 
 **USAGE**
 
   - `import rest`
-  - Implement the `Model()` base class for each of your resources
+  - Implement the `Model()` base class for each of your resources.
+    - `select()`, `update()` and `delete()` return the response body.
+    - `create()` returns a pair (body, query) where query is used to build the `Location` header.
   - Instantiate an `Api()`
   - `register()` each URL path againts a resource instance
   - `serve()` the API (accept a custom interface and port)
@@ -37,7 +48,7 @@ Of course you'll need Bottle as dependency (it's a single-file module.)
 **EXAMPLE**
 
 	import rest
-	class About(rest.Model):
+	class Hello(rest.Model):
 		def select(self, **kwargs):
 			return {"msg": "hello world!"}
 		def create(self, body):
@@ -47,6 +58,6 @@ Of course you'll need Bottle as dependency (it's a single-file module.)
 		def delete(self, body):
 			raise NotImplementedError("cannot delete")
 	api = rest.Api()
-	api.register("/about", About())
+	api.register("/hello", Hello())
 	api.serve()
 

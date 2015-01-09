@@ -29,7 +29,7 @@ class Model(object):
 
 	@abc.abstractmethod
 	def create(self, body):
-		"return (result, url) on success, raise ValidationError or ResourceExists on failure"
+		"return (result, query) on success, raise ValidationError or ResourceExists on failure"
 		raise NotImplementedEror("create not implemented")
 
 	@abc.abstractmethod
@@ -157,12 +157,12 @@ class Api(object):
 		except Exception as e:
 			return self.Failure(e, status = 422)
 		try:
-			result = model.create(body)
+			result, query = model.create(body)
 			assert result, "create result cannot be null"
 			return self.Success(
 				result,
 				status = 201,
-				headers = {"Location": bottle.request.url})
+				headers = {"Location": "%s?%s" % (bottle.request.url, query)})
 		except NotImplementedError as e:
 			return self.Failure(e, status = 501)
 		except ValidationError as e:
