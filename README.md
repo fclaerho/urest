@@ -5,7 +5,10 @@
 
 **Tiny REST Framework for Python**
 built as a Bottle wrapper implementing REST design recommended practices.
-Of course you'll need Bottle as dependency (it's a single-file module.)
+
+Of course you'll need Bottle as dependency,
+get it from your usual python package retailer
+or use the version bundled with rest in the `vendor/` subdirectory.
 
 **HTTP STATUS CODES**
 
