@@ -219,13 +219,12 @@ class Server(object):
 		bottle.route(path, "POST", lambda: self.create(model))
 		bottle.route(path, "DELETE", lambda: self.delete(model))
 
+	def serve(self):
+		bottle.run(host = self.hostname, port = self.port, quiet = True)
+
 	def start(self):
 		assert not self.thread, "already started"
-		self.thread = threading.Thread(target = bottle.run, kwargs = {
-			"host": self.hostname,
-			"port": self.port,
-			"quiet": True,
-		})
+		self.thread = threading.Thread(target = self.serve)
 		self.thread.daemon = True
 		self.thread.start()
 

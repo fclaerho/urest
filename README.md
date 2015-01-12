@@ -43,15 +43,16 @@ In JSON (equivalent in XML):
 
 **USAGE**
 
-  - `import rest`
-  - Implement the `Model()` base class for each of your resources.
-    - `select()`, `update()` and `delete()` return the response body.
-    - `create()` returns a pair (body, query) where query is used to build the `Location` header.
-  - Instantiate a `Server([hostname], [port])`
-  - `register([path], [model])` each URL path againts a model instance
-  - `start()` the server
-  - Connect to your endpoint at localhost:8080 (default)
-  - `stop()` the server when you're done
+  * `import rest`
+  * Implement the `Model()` base class for each of your resources.
+    * `select()`, `update()` and `delete()` return the response body.
+    * `create()` returns a pair (body, query) where query is used to build the `Location` header.
+  * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
+  * `.register([path], [model])` each URL path againts a model instance
+  * Either start the server:
+    * synchronously: with `.serve()`
+    * asynchronously: with `.start()` then `.stop()` when you're done
+  * Connect to your endpoint at http://[hostname]:[port]
 
 **EXAMPLE**
 
@@ -67,10 +68,10 @@ In JSON (equivalent in XML):
 			raise NotImplementedError("cannot delete")
 	server = rest.Server()
 	server.register("/hello", Hello())
-	server.start()
+	server.serve()
 
 **TESTS**
 
 To run tests:
 
-	$ PYTHONPATH=.:vendor python test.py
+	$ make
