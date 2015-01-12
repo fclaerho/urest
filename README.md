@@ -47,8 +47,8 @@ In JSON (equivalent in XML):
   - Implement the `Model()` base class for each of your resources.
     - `select()`, `update()` and `delete()` return the response body.
     - `create()` returns a pair (body, query) where query is used to build the `Location` header.
-  - Instantiate a `Server()` (possibly with a custom interface and port to listen to)
-  - `register()` each URL path againts a resource instance
+  - Instantiate a `Server([hostname], [port])`
+  - `register([path], [model])` each URL path againts a model instance
   - `start()` the server
   - Connect to your endpoint at localhost:8080 (default)
   - `stop()` the server when you're done
