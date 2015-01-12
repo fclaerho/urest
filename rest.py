@@ -4,7 +4,7 @@
 
 __version__ = "20150108-1"
 
-import threading, json, abc
+import threading, json, time, abc
 
 import bottle # 3rd-party
 
@@ -227,6 +227,7 @@ class Server(object):
 		self.thread = threading.Thread(target = self.serve)
 		self.thread.daemon = True
 		self.thread.start()
+		time.sleep(0.1) # let the server start
 
 	def stop(self):
 		assert self.thread, "not started"
