@@ -1,7 +1,7 @@
-	  ___        _   
-	 | _ \___ __| |_ 
+	  ___        _
+	 | _ \___ __| |_
 	 |   / -_|_-<  _|
-	 |_|_\___/__/\__|               
+	 |_|_\___/__/\__|
 
 **Tiny REST Framework for Python**
 built as a Bottle wrapper implementing REST design recommended practices.
@@ -71,7 +71,5 @@ In JSON (equivalent in XML):
 	server.serve()
 
 **TESTS**
-
-To run tests:
 
 	$ make
