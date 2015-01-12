@@ -47,10 +47,11 @@ In JSON (equivalent in XML):
   - Implement the `Model()` base class for each of your resources.
     - `select()`, `update()` and `delete()` return the response body.
     - `create()` returns a pair (body, query) where query is used to build the `Location` header.
-  - Instantiate an `Api()`
+  - Instantiate a `Server()` (possibly with a custom interface and port to listen to)
   - `register()` each URL path againts a resource instance
-  - `serve()` the API (accept a custom interface and port)
+  - `start()` the server
   - Connect to your endpoint at localhost:8080 (default)
+  - `stop()` the server when you're done
 
 **EXAMPLE**
 
@@ -64,9 +65,9 @@ In JSON (equivalent in XML):
 			raise NotImplementedError("cannot update")
 		def delete(self, body):
 			raise NotImplementedError("cannot delete")
-	api = rest.Api()
-	api.register("/hello", Hello())
-	api.serve()
+	server = rest.Server()
+	server.register("/hello", Hello())
+	server.start()
 
 **TESTS**
 
