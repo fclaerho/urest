@@ -51,7 +51,7 @@ In JSON (equivalent in XML):
   * `.register([path], [model])` each URL path againts a model instance
   * Either start the server:
     * synchronously: with `.serve()`
-    * asynchronously: with `.start()` then `.stop()` when you're done
+    * asynchronously: with `.start()` (then `.wait_up`()) then `.stop()` when you're done
   * Connect to your endpoint at http://[hostname]:[port]
 
 **EXAMPLE**

@@ -54,6 +54,7 @@ class Test(unittest.TestCase):
 		self.server = rest.Server()
 		self.server.register("/hello", Hello())
 		self.server.start()
+		self.server.wait_up()
 
 	def tearDown(self):
 		self.server.stop()
