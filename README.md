@@ -1,4 +1,9 @@
-Tiny REST Framework for Python,
+	  ___        _   
+	 | _ \___ __| |_ 
+	 |   / -_|_-<  _|
+	 |_|_\___/__/\__|               
+
+**Tiny REST Framework for Python**
 built as a Bottle wrapper implementing REST design recommended practices.
 Of course you'll need Bottle as dependency (it's a single-file module.)
 
@@ -61,3 +66,8 @@ In JSON (equivalent in XML):
 	api.register("/hello", Hello())
 	api.serve()
 
+**TESTS**
+
+To run tests:
+
+	$ PYTHONPATH=.:vendor python test.py
