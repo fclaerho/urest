@@ -4,7 +4,7 @@
 
 __version__ = "20150108-1"
 
-import unittest, json, abc
+import threading, json, abc
 
 import bottle # 3rd-party
 
@@ -80,10 +80,13 @@ class xml:
 	def loads(cls, string):
 		raise NotImplementedError("cannot load string yet")
 
-class Api(object):
+class Server(object):
 
-	def __init__(self, json_encoder_cls = None):
+	def __init__(self, hostname = "0.0.0.0", port = 8080, json_encoder_cls = None):
 		self.json_encoder_cls = json_encoder_cls
+		self.hostname = hostname
+		self.port = port
+		self.thread = None
 
 	def Response(self, obj, status, headers):
 		accepted = bottle.request.headers.get("Accept")
@@ -216,5 +219,17 @@ class Api(object):
 		bottle.route(path, "POST", lambda: self.create(model))
 		bottle.route(path, "DELETE", lambda: self.delete(model))
 
-	def serve(self, host = "0.0.0.0", port = 8080, debug = False):
-		bottle.run(host = host, port = port, debug = debug)
+	def start(self):
+		assert not self.thread, "already started"
+		self.thread = threading.Thread(target = bottle.run, kwargs = {
+			"host": self.hostname,
+			"port": self.port,
+			"quiet": True,
+		})
+		self.thread.daemon = True
+		self.thread.start()
+
+	def stop(self):
+		assert self.thread, "not started"
+		self.thread.join(timeout = 0)
+		self.thread = None
