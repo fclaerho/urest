@@ -28,12 +28,12 @@ At the moment, two formats are supported: `application/json` and `application/xm
 
 **HTTP CRUD**
 
-  * Selection: GET /%resource%s?[&fields=][&limit=][&offset=]…
+  * Selection: GET /%resources%?[&fields=][&limit=][&offset=]…
   * Creation:
-    POST /%resource%s and body contains the payload
+    POST /%resources% and body contains the payload
     On successful creation, the response `Location` header is set
-  * Update: PUT /%resource%s and body contains the payload
-  * Deletion: DELETE /%resource%s {"name": %string%}
+  * Update: PUT /%resources% and body contains the payload
+  * Deletion: DELETE /%resources% {"name": %string%}
 
 **RESPONSE BODY STRUCTURE**
 
