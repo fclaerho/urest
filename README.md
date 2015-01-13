@@ -49,7 +49,7 @@ In JSON (equivalent in XML):
     * `create()` returns a pair (body, query) where query is used to build the `Location` header.
   * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
   * `.register([path], [model])` each URL path againts a model instance
-  * Start the server with `.serve()`
+  * Start the server with `.run()`, press ^C to stop
   * Connect to your endpoint at http://[hostname]:[port]
 
 **EXAMPLE**

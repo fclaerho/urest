@@ -71,7 +71,7 @@ class Test(unittest.TestCase):
 		if not SERVER:
 			SERVER = rest.Server()
 			SERVER.register("/hello", Hello())
-			background(None, SERVER.serve)
+			background(None, SERVER.run)
 
 	def test_get(self):
 		res = http_request(
