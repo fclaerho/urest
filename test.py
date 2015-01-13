@@ -1,6 +1,6 @@
 # copyright (c) 2015 fclaerhout.fr, released under the MIT license.
 
-import unittest, json
+import unittest, json, time
 
 import bottle, rest
 
@@ -32,6 +32,20 @@ def http_request(
 	res = cnx.getresponse()
 	return res
 
+def background(period, callback, *args, **kwargs):
+	"spawn a thread looping on callback periodically"
+	import threading, time
+	if period:
+		def wrapper():
+			while True:
+				callback(*args, **kwargs)
+				time.sleep(period)
+	else:
+		def wrapper(): callback(*args, **kwargs)
+	thread = threading.Thread(target = wrapper)
+	thread.daemon = True
+	thread.start()
+
 MSG = "hello, world!"
 
 class Hello(rest.Model):
@@ -48,16 +62,16 @@ class Hello(rest.Model):
 	def delete(self, body):
 		raise NotImplementedError()
 
+SERVER = None
+
 class Test(unittest.TestCase):
 
 	def setUp(self):
-		self.server = rest.Server()
-		self.server.register("/hello", Hello())
-		self.server.start()
-		self.server.wait_up()
-
-	def tearDown(self):
-		self.server.stop()
+		global SERVER
+		if not SERVER:
+			SERVER = rest.Server()
+			SERVER.register("/hello", Hello())
+			background(None, SERVER.serve)
 
 	def test_get(self):
 		res = http_request(

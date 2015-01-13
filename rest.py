@@ -4,7 +4,7 @@
 
 __version__ = "20150108-1"
 
-import threading, httplib, json, abc
+import json, abc
 
 import bottle # 3rd-party
 
@@ -221,29 +221,3 @@ class Server(object):
 
 	def serve(self):
 		bottle.run(host = self.hostname, port = self.port, quiet = True)
-
-	def is_started(self):
-		return self.thread and self.thread.is_alive()
-
-	def start(self):
-		assert not self.is_started(), "server already started"
-		self.thread = threading.Thread(target = self.serve)
-		self.thread.daemon = True
-		self.thread.start()
-
-	def stop(self):
-		assert self.is_started(), "server not started"
-		self.thread.join(timeout = 0)
-		self.thread = None
-
-	def wait_up(self):
-		"return when the socket is opened"
-		while True:
-			try:
-				httplib.HTTPConnection(
-					host = self.hostname,
-					port = self.port,
-					timeout = 4)
-				break
-			except:
-				pass
