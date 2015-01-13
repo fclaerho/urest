@@ -50,7 +50,7 @@ In JSON (equivalent in XML):
   * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
   * `.register([path], [model])` each URL path againts a model instance
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
-  * Connect to your endpoint at http://[hostname]:[port]
+  * Connect to your endpoint at http://%hostname%[:%port%]
 
 **EXCEPTIONS**
 
@@ -69,7 +69,7 @@ For a proper handling of the HTTP status codes:
     * `NoSuchResource` on missing resource
 
 Raise `NotImplementedError` if a method is not implemented.
-Any other exception else will be handled as 500.
+Any other exception will be handled as 500.
 
 **EXAMPLE**
 
@@ -87,6 +87,8 @@ Any other exception else will be handled as 500.
 	server.register("/hello", Hello())
 	server.run()
 
-**RUN TESTS**
+**DEVELOPMENT**
+
+To run tests:
 
 	$ make
