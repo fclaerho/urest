@@ -48,7 +48,7 @@ def background(period, callback, *args, **kwargs):
 
 MSG = "hello, world!"
 
-class Hello(rest.Model):
+class Hello(rest.Resources):
 
 	def select(self, **kwargs):
 		return {"msg": MSG}

@@ -2,7 +2,7 @@
 
 "Bottle wrapper implementing REST design recommended practices"
 
-__version__ = "20150113-2"
+__version__ = "20150113-3"
 
 import json, abc
 
@@ -18,7 +18,7 @@ class FormatError(Exception): pass
 
 class SyntaxError(Exception): pass
 
-class Model(object):
+class Resources(object):
 
 	__metaclass__ = abc.ABCMeta
 
@@ -114,12 +114,12 @@ class Server(object):
 			status = status,
 			headers = {})
 
-	def select(self, model):
+	def select(self, resources):
 		try:
 			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else None
 			limit = int(bottle.request.query.limit or 20)
 			offset = int(bottle.request.query.offset or 0)
-			rows = model.select(**bottle.request.query)
+			rows = resources.select(**bottle.request.query)
 			if len(rows) > limit:
 				rows = rows[offset:offset + limit]
 			if fields:
@@ -148,7 +148,7 @@ class Server(object):
 		else:
 			raise FormatError("%s: unsupported input content-type" % content_type)
 
-	def create(self, model):
+	def create(self, resources):
 		try:
 			body = self.parse_body()
 		except FormatError as e:
@@ -156,7 +156,7 @@ class Server(object):
 		except Exception as e:
 			return self.Failure(e, status = 422)
 		try:
-			result, query = model.create(body)
+			result, query = resources.create(body)
 			assert result, "create result cannot be null"
 			return self.Success(
 				result,
@@ -171,7 +171,7 @@ class Server(object):
 		except Exception as e:
 			return self.Failure(e, status = 500)
 
-	def update(self, model):
+	def update(self, resources):
 		try:
 			body = self.parse_body()
 		except FormatError as e:
@@ -179,7 +179,7 @@ class Server(object):
 		except Exception as e:
 			return self.Failure(e, status = 422)
 		try:
-			result = model.update(body)
+			result = resources.update(body)
 			return self.Success(result, status = 200 if result else 204)
 		except NotImplementedError as e:
 			return self.Failure(e, status = 501)
@@ -209,11 +209,11 @@ class Server(object):
 		except Exception as e:
 			return self.Failure(e, status = 500)
 
-	def register(self, path, model):
-		bottle.route(path, "GET", lambda: self.select(model))
-		bottle.route(path, "PUT", lambda: self.update(model))
-		bottle.route(path, "POST", lambda: self.create(model))
-		bottle.route(path, "DELETE", lambda: self.delete(model))
+	def register(self, path, resources):
+		bottle.route(path, "GET", lambda: self.select(resources))
+		bottle.route(path, "PUT", lambda: self.update(resources))
+		bottle.route(path, "POST", lambda: self.create(resources))
+		bottle.route(path, "DELETE", lambda: self.delete(resources))
 
 	def run(self, quiet = False, debug = False):
 		bottle.run(host = self.hostname, port = self.port, quiet = quiet, debug = debug)

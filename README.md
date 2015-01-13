@@ -44,7 +44,7 @@ In JSON (equivalent in XML):
 **USAGE**
 
   * `import rest`
-  * Implement the `Model()` base class for each of your resources.
+  * Implement the `Resources()` base class for each of your resources.
     * `select()`, `update()` and `delete()` return the response body.
     * `create()` returns a pair (body, query) where query is used to build the `Location` header.
   * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
@@ -72,7 +72,7 @@ For a proper handling of the HTTP status codes:
     * `NoSuchResource` on missing resource
     * `NotImplementedError` if not implemented
 
-Anything else will be handled as 500.
+Any other exception else will be handled as 500.
 
 **EXAMPLE**
 
