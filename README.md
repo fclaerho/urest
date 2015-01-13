@@ -66,7 +66,7 @@ In JSON (equivalent in XML):
 			raise NotImplementedError("cannot delete")
 	server = rest.Server()
 	server.register("/hello", Hello())
-	server.serve()
+	server.run()
 
 **RUN TESTS**
 
