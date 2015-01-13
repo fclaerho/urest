@@ -1,6 +1,6 @@
 # copyright (c) 2015 fclaerhout.fr, released under the MIT license.
 
-import unittest, json, time
+import unittest, json
 
 import bottle, rest
 
@@ -32,19 +32,20 @@ def http_request(
 	res = cnx.getresponse()
 	return res
 
-def background(period, callback, *args, **kwargs):
-	"spawn a thread looping on callback periodically"
+def background(seconds, callback, *args, **kwargs):
+	"spawn a thread looping on callback periodically every $seconds (or once if seconds = None)"
 	import threading, time
-	if period:
+	if seconds:
 		def wrapper():
 			while True:
 				callback(*args, **kwargs)
-				time.sleep(period)
+				time.sleep(seconds)
 	else:
 		def wrapper(): callback(*args, **kwargs)
 	thread = threading.Thread(target = wrapper)
 	thread.daemon = True
 	thread.start()
+	time.sleep(0.1) # let thread start
 
 MSG = "hello, world!"
 
@@ -72,7 +73,6 @@ class Test(unittest.TestCase):
 			SERVER = rest.Server()
 			SERVER.register("/hello", Hello())
 			background(None, SERVER.run)
-			time.sleep(0.1)
 
 	def test_get(self):
 		res = http_request(
