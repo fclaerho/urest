@@ -58,20 +58,17 @@ For a proper handling of the HTTP status codes:
 
   * `select()` must raise:
     * `ValidationError` on an invalid input
-    * `NotImplementedError` if not implemented
   * `create()` must raise:
     * `ValidationError` on an invalid input
     * `ResourceExists` on resource conflict
-    * `NotImplementedError` if not implemented
   * `update()` must raise:
     * `ValidationError` on an invalid input
     * `NoSuchResource` on missing resource
-    * `NotImplementedError` if not implemented
   * `delete()` must raise:
     * `ValidationError` on an invalid input
     * `NoSuchResource` on missing resource
-    * `NotImplementedError` if not implemented
 
+Raise `NotImplementedError` if a method is not implemented.
 Any other exception else will be handled as 500.
 
 **EXAMPLE**
