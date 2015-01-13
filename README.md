@@ -74,7 +74,7 @@ Any other exception else will be handled as 500.
 **EXAMPLE**
 
 	import rest
-	class Hello(rest.Model):
+	class Hello(rest.Resources):
 		def select(self, **kwargs):
 			return {"msg": "hello world!"}
 		def create(self, body):
