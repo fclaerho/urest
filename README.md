@@ -52,6 +52,28 @@ In JSON (equivalent in XML):
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
   * Connect to your endpoint at http://[hostname]:[port]
 
+**EXCEPTIONS**
+
+For a proper handling of the HTTP status codes:
+
+  * `select()` must raise:
+    * `ValidationError` on an invalid input
+    * `NotImplementedError` if not implemented
+  * `create()` must raise:
+    * `ValidationError` on an invalid input
+    * `ResourceExists` on resource conflict
+    * `NotImplementedError` if not implemented
+  * `update()` must raise:
+    * `ValidationError` on an invalid input
+    * `NoSuchResource` on missing resource
+    * `NotImplementedError` if not implemented
+  * `delete()` must raise:
+    * `ValidationError` on an invalid input
+    * `NoSuchResource` on missing resource
+    * `NotImplementedError` if not implemented
+
+Anything else will be handled as 500.
+
 **EXAMPLE**
 
 	import rest

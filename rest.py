@@ -24,22 +24,18 @@ class Model(object):
 
 	@abc.abstractmethod
 	def select(self, **kwargs):
-		"raise ValidationError on failure"
 		raise NotImplementedError("select not implemented")
 
 	@abc.abstractmethod
 	def create(self, body):
-		"return (result, query) on success, raise ValidationError or ResourceExists on failure"
 		raise NotImplementedEror("create not implemented")
 
 	@abc.abstractmethod
 	def update(self, body):
-		"raise ValidatioError or NoSuchResource on failure"
 		raise NotImplementedEror("update not implemented")
 
 	@abc.abstractmethod
 	def delete(self, body):
-		"raise ValidationError or NoSuchResource on failure"
 		raise NotImplementedEror("delete not implemented")
 
 class xml:
