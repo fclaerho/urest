@@ -9,7 +9,8 @@ Of course you'll need Bottle as dependency,
 get it from your usual python package retailer
 or use the version bundled with rest in the `vendor/` subdirectory.
 
-**HTTP STATUS CODES**
+HTTP STATUS CODES
+-----------------
 
   * 201: Successful resource creation
   * 204: Idem, empty response body
@@ -20,13 +21,15 @@ or use the version bundled with rest in the `vendor/` subdirectory.
   * 404: No such resource
   * 501: Not implemented
 
-**I/O FORMAT**
+I/O FORMAT
+----------
 
 At the moment, two formats are supported: `application/json` and `application/xml`
   * The HTTP `Content-Type` header defines the request body format
   * The HTTP `Accept` header defines the response body formats
 
-**HTTP CRUD**
+HTTP CRUD
+---------
 
   * Selection: GET /%resources%?[&fields=][&limit=][&offset=]…
   * Creation:
@@ -35,13 +38,15 @@ At the moment, two formats are supported: `application/json` and `application/xm
   * Update: PUT /%resources% and body contains the payload
   * Deletion: DELETE /%resources% {"name": %string%}
 
-**RESPONSE BODY STRUCTURE**
+RESPONSE BODY STRUCTURE
+-----------------------
 
 In JSON (equivalent in XML):
   * On success: {"success": true, "result": %any%}
   * On failure: {"success": false, "exception": %string%}
 
-**USAGE**
+USAGE
+-----
 
   * `import rest`
   * Implement the `Resources()` base class for each of your resources.
@@ -52,7 +57,8 @@ In JSON (equivalent in XML):
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
   * Connect to your endpoint at http://%hostname%[:%port%]
 
-**EXCEPTIONS**
+EXCEPTIONS
+----------
 
 For a proper handling of the HTTP status codes:
 
@@ -71,7 +77,8 @@ For a proper handling of the HTTP status codes:
 Raise `NotImplementedError` if a method is not implemented.
 Any other exception will be handled as 500.
 
-**EXAMPLE**
+EXAMPLE
+-------
 
 	import rest
 	class Hello(rest.Resources):
@@ -87,7 +94,8 @@ Any other exception will be handled as 500.
 	server.register("/hello", Hello())
 	server.run()
 
-**DEVELOPMENT**
+DEVELOPMENT
+-----------
 
 To run tests:
 
