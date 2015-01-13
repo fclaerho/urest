@@ -2,7 +2,7 @@
 
 "Bottle wrapper implementing REST design recommended practices"
 
-__version__ = "20150113-1"
+__version__ = "20150113-2"
 
 import json, abc
 
@@ -219,5 +219,5 @@ class Server(object):
 		bottle.route(path, "POST", lambda: self.create(model))
 		bottle.route(path, "DELETE", lambda: self.delete(model))
 
-	def run(self):
-		bottle.run(host = self.hostname, port = self.port, quiet = True)
+	def run(self, debug = False):
+		bottle.run(host = self.hostname, port = self.port, quiet = True, debug = debug)
