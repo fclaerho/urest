@@ -1,5 +1,6 @@
 export PYTHONPATH := .:vendor
 
-test:
-	python test.py
+check:
+	python selftest.py
 	find . -name '*.pyc' -delete
+
