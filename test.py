@@ -72,6 +72,7 @@ class Test(unittest.TestCase):
 			SERVER = rest.Server()
 			SERVER.register("/hello", Hello())
 			background(None, SERVER.run)
+			time.sleep(0.1)
 
 	def test_get(self):
 		res = http_request(

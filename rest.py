@@ -219,5 +219,5 @@ class Server(object):
 		bottle.route(path, "POST", lambda: self.create(model))
 		bottle.route(path, "DELETE", lambda: self.delete(model))
 
-	def run(self, debug = False):
-		bottle.run(host = self.hostname, port = self.port, quiet = True, debug = debug)
+	def run(self, quiet = False, debug = False):
+		bottle.run(host = self.hostname, port = self.port, quiet = quiet, debug = debug)
