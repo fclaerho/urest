@@ -93,10 +93,3 @@ EXAMPLE
 	server = rest.Server()
 	server.register("/hello", Hello())
 	server.run()
-
-DEVELOPMENT
------------
-
-To run tests:
-
-	$ make
