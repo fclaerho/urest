@@ -47,7 +47,7 @@ def background(seconds, callback, *args, **kwargs):
 	thread.start()
 	time.sleep(0.1) # let thread start
 
-MSG = "hello, world!"
+MSG = "Hello, World!"
 
 class Hello(rest.Resources):
 

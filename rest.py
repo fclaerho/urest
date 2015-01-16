@@ -156,12 +156,12 @@ class Server(object):
 		except Exception as e:
 			return self.Failure(e, status = 422)
 		try:
-			result, query = resources.create(body)
+			result, querystring, asynchronous = resources.create(body)
 			assert result, "create result cannot be null"
 			return self.Success(
 				result,
-				status = 201,
-				headers = {"Location": "%s?%s" % (bottle.request.url, query)})
+				status = 202 if asynchronous else 201,
+				headers = {"Location": "%s?%s" % (bottle.request.url, querystring)})
 		except NotImplementedError as e:
 			return self.Failure(e, status = 501)
 		except ValidationError as e:

@@ -12,14 +12,15 @@ or use the version bundled with rest in the `vendor/` subdirectory.
 HTTP STATUS CODES
 -----------------
 
-  * 201: Successful resource creation
-  * 204: Idem, empty response body
-  * 406: Unsupported output formats (Accept header)
-  * 415: Unsupported input formats (Content-Type header)
-  * 422: Invalid input
-  * 409: Resource exists
-  * 404: No such resource
-  * 501: Not implemented
+  * 201: Created — the resource has been created
+  * 202: Accepted — the resource creation is ongoing
+  * 204: No Content — the request succeeded but there's no response body
+  * 404: Not Found — no such resource
+  * 406: Not Acceptable — unsupported output formats (Accept header)
+  * 409: Conflict — the resource already exists
+  * 415: Unsupported Media Type — unsupported input formats (Content-Type header)
+  * 422: Unprocessable Entity — request input is invalid
+  * 501: Not Implemented
 
 I/O FORMAT
 ----------
@@ -51,7 +52,9 @@ USAGE
   * `import rest`
   * Implement the `Resources()` base class for each of your resources.
     * `select()`, `update()` and `delete()` return the response body.
-    * `create()` returns a pair (body, query) where query is used to build the `Location` header.
+    * `create()` returns a tuple (body, querystring, asynchronous)
+      * querystring: used to build the response `Location` header
+      * asynchronous: if True, use 202 as response status code, 201 otherwise
   * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
   * `.register([path], [model])` each URL path againts a model instance
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
