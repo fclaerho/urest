@@ -55,13 +55,13 @@ class Hello(rest.Resources):
 		return {"msg": MSG}
 
 	def create(self, body):
-		raise NotImplementedError()
+		raise MethodNotAllowed
 
 	def update(self, body):
-		raise NotImplementedError()
+		raise MethodNotAllowed
 
 	def delete(self, body):
-		raise NotImplementedError()
+		raise MethodNotAllowed
 
 SERVER = None
 
