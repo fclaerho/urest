@@ -4,10 +4,12 @@
 	 |_|_\___/__/\__|
 
 **Tiny REST Framework for Python**
-built as a Bottle wrapper implementing REST design recommended practices.
+built as a Bottle wrapper implementing REST design recommended practices[1].
 Of course you'll need Bottle as dependency,
 get it from your usual python package retailer
 or use the version bundled with rest in the `vendor/` subdirectory.
+
+[1] Add references here ;-)
 
 [![Build Status](https://secure.travis-ci.org/fclaerho/rest.png?branch=master)](http://travis-ci.org/fclaerho/rest)
 
@@ -52,6 +54,7 @@ In JSON (equivalent in XML):
 USAGE
 -----
 
+  * Checkout the repository
   * `import rest`
   * Implement the `Resources()` base class for each of your resources.
     * `select()`, `update()` and `delete()` return the response body.
