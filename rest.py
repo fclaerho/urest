@@ -8,6 +8,8 @@ import json, abc
 
 import bottle # 3rd-party
 
+class MethodNotAllowed(Exception): pass
+
 class ValidationError(Exception): pass
 
 class NoSuchResource(Exception): pass
@@ -133,6 +135,8 @@ class Server(object):
 			return self.Success(rows, status = 200)
 		except NotImplementedError as e:
 			return self.Failure(e, status = 501)
+		except MethodNotAllowed as e:
+			return self.Failure(e, status = 405)
 		except ValidationError as e:
 			return self.Failure(e, status = 400)
 		except Exception as e:
@@ -164,6 +168,8 @@ class Server(object):
 				headers = {"Location": "%s?%s" % (bottle.request.url, querystring)})
 		except NotImplementedError as e:
 			return self.Failure(e, status = 501)
+		except MethodNotAllowed as e:
+			return self.Failure(e, status = 405)
 		except ValidationError as e:
 			return self.Failure(e, status = 422)
 		except ResourceExists as e:
@@ -183,6 +189,8 @@ class Server(object):
 			return self.Success(result, status = 200 if result else 204)
 		except NotImplementedError as e:
 			return self.Failure(e, status = 501)
+		except MethodNotAllowed as e:
+			return self.Failure(e, status = 405)
 		except ValidationError as e:
 			return self.Failure(e, status = 422)
 		except NoSuchResource as e:
@@ -202,6 +210,8 @@ class Server(object):
 			return self.Success(result, status = 200 if result else 204)
 		except NotImplementedError as e:
 			return self.Failure(e, status = 501)
+		except MethodNotAllowed as e:
+			return self.Failure(e, status = 405)
 		except ValidationError as e:
 			return self.Failure(e, status = 422)
 		except NoSuchResource as e:

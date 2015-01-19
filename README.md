@@ -18,6 +18,7 @@ HTTP STATUS CODES
   * 202: Accepted — the resource creation is ongoing
   * 204: No Content — the request succeeded but there's no response body
   * 404: Not Found — no such resource
+  * 405: Method Not Allowed - http method not allowed on the resource
   * 406: Not Acceptable — unsupported output formats (Accept header)
   * 409: Conflict — the resource already exists
   * 415: Unsupported Media Type — unsupported input formats (Content-Type header)
@@ -68,18 +69,25 @@ EXCEPTIONS
 For a proper handling of the HTTP status codes:
 
   * `select()` must raise:
+    * `NotImplementedError` if a method or a part of it is not implemented
+    * `MethodNotAllowed` if the method is not allowed
     * `ValidationError` on an invalid input
   * `create()` must raise:
+    * `NotImplementedError` if a method or a part of it is not implemented
+    * `MethodNotAllowed` if the method is not allowed
     * `ValidationError` on an invalid input
     * `ResourceExists` on resource conflict
   * `update()` must raise:
+    * `NotImplementedError` if a method or a part of it is not implemented
+    * `MethodNotAllowed` if the method is not allowed
     * `ValidationError` on an invalid input
     * `NoSuchResource` on missing resource
   * `delete()` must raise:
+    * `NotImplementedError` if a method or a part of it is not implemented
+    * `MethodNotAllowed` if the method is not allowed
     * `ValidationError` on an invalid input
     * `NoSuchResource` on missing resource
 
-Raise `NotImplementedError` if a method is not implemented.
 Any other exception will be handled as 500.
 
 EXAMPLE
@@ -90,11 +98,11 @@ EXAMPLE
 		def select(self, **kwargs):
 			return {"msg": "hello world!"}
 		def create(self, body):
-			raise NotImplementedError("cannot create")
+			raise MethodNotAllowed
 		def update(self, body):
-			raise NotImplementedError("cannot update")
+			raise MethodNotAllowed
 		def delete(self, body):
-			raise NotImplementedError("cannot delete")
+			raise MethodNotAllowed
 	server = rest.Server()
 	server.register("/hello", Hello())
 	server.run()
