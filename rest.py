@@ -20,6 +20,8 @@ class FormatError(Exception): pass
 
 class SyntaxError(Exception): pass
 
+class LockedError(Exception): pass
+
 class Resources(object):
 
 	__metaclass__ = abc.ABCMeta
@@ -195,6 +197,8 @@ class Server(object):
 			return self.Failure(e, status = 422)
 		except NoSuchResource as e:
 			return self.Failure(e, status = 404)
+		except LockedError as e:
+			return self.Failure(e, status = 423)
 		except Exception as e:
 			return self.ailure(e, status = 500)
 
@@ -216,6 +220,8 @@ class Server(object):
 			return self.Failure(e, status = 422)
 		except NoSuchResource as e:
 			return self.Failure(e, status = 404)
+		except LockedError as e:
+			return self.Failure(e, status = 423)
 		except Exception as e:
 			return self.Failure(e, status = 500)
 

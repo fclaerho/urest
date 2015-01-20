@@ -8,7 +8,7 @@ built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementin
 Of course you'll need Bottle as dependency, get it from your usual python package retailer
 or use the version bundled with rest in the `vendor/` subdirectory.
 
-[1] Add references here ;-)
+[1] http://www.restapitutorial.com
 
 [![Build Status](https://secure.travis-ci.org/fclaerho/rest.png?branch=master)](http://travis-ci.org/fclaerho/rest)
 
@@ -24,6 +24,7 @@ HTTP STATUS CODES
   * 409: Conflict — the resource already exists
   * 415: Unsupported Media Type — unsupported input formats (Content-Type header)
   * 422: Unprocessable Entity — request input is invalid
+  * 423: Locked — the resource is in use and cannot be updated/deleted
   * 501: Not Implemented
 
 I/O FORMAT
@@ -84,11 +85,13 @@ For a proper handling of the HTTP status codes:
     * `MethodNotAllowed` if the method is not allowed
     * `ValidationError` on an invalid input
     * `NoSuchResource` on missing resource
+    * `LockedError` on resource in use
   * `delete()` must raise:
     * `NotImplementedError` if a method or a part of it is not implemented
     * `MethodNotAllowed` if the method is not allowed
     * `ValidationError` on an invalid input
     * `NoSuchResource` on missing resource
+    * `LockedError` on resource in use
 
 Any other exception will be handled as 500.
 
