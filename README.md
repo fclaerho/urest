@@ -9,6 +9,7 @@ Of course you'll need Bottle as dependency, get it from your usual python packag
 or use the version bundled with rest in the `vendor/` subdirectory.
 
 [1] http://www.restapitutorial.com
+[2] https://bourgeois.me/rest/
 
 [![Build Status](https://secure.travis-ci.org/fclaerho/rest.png?branch=master)](http://travis-ci.org/fclaerho/rest)
 
