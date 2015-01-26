@@ -4,18 +4,19 @@
 	 |_|_\___/__/\__|
 
 **Tiny REST Framework for Python**
-built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementing REST design recommended practices[1].
+built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementing REST design recommended practices[1][2].
 Of course you'll need Bottle as dependency, get it from your usual python package retailer
 or use the version bundled with rest in the `vendor/` subdirectory.
 
-[1] http://www.restapitutorial.com
-[2] https://bourgeois.me/rest/
+  * [1] http://www.restapitutorial.com
+  * [2] https://bourgeois.me/rest/
 
 [![Build Status](https://secure.travis-ci.org/fclaerho/rest.png?branch=master)](http://travis-ci.org/fclaerho/rest)
 
 HTTP STATUS CODES
 -----------------
 
+  * 200: OK — returned if no specific 2xx status code fits
   * 201: Created — the resource has been created
   * 202: Accepted — the resource creation is ongoing
   * 204: No Content — the request succeeded but there's no response body
