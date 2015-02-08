@@ -6,7 +6,7 @@ check:
 	@python selftest.py
 
 clean:
-	@rm nosetests.xml
+	@rm -f nosetests.xml
 	@find . -name "*.pyc" -delete
 
 nosetests.xml:
