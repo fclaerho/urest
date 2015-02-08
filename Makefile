@@ -1,6 +1,6 @@
 export PYTHONPATH := .:vendor
 
-.PHONY: check
+.PHONY: check clean
 
 check:
 	@python selftest.py
