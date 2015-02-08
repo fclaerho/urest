@@ -64,20 +64,21 @@ class Hello(rest.Resources):
 		raise MethodNotAllowed
 
 SERVER = None
+PORT = 12345
 
 class Test(unittest.TestCase):
 
 	def setUp(self):
 		global SERVER
 		if not SERVER:
-			SERVER = rest.Server(port = 12345)
+			SERVER = rest.Server(port = PORT)
 			SERVER.register("/hello", Hello())
 			background(None, SERVER.run)
 
 	def test_get(self):
 		res = http_request(
 			hostname = "localhost",
-			port = 8080,
+			port = PORT,
 			method = "GET",
 			path = "/hello")
 		self.assertEqual(res.status, 200)
