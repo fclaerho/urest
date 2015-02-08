@@ -9,5 +9,6 @@ clean:
 	@rm -f nosetests.xml
 	@find . -name "*.pyc" -delete
 
-nosetests.xml:
-	@nosetests --with-xunit selftest.py
+nosetests.xml: selftest.py
+	@nosetests --with-xunit $^
+
