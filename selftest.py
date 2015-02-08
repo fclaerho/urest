@@ -70,7 +70,7 @@ class Test(unittest.TestCase):
 	def setUp(self):
 		global SERVER
 		if not SERVER:
-			SERVER = rest.Server()
+			SERVER = rest.Server(port = 12345)
 			SERVER.register("/hello", Hello())
 			background(None, SERVER.run)
 
