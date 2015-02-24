@@ -11,4 +11,5 @@ setup(
 	py_modules = ["rest"],
 	test_suite = "selftest",
 	description = path.__doc__.splitlines()[0],
-	install_requires = ['bottle>=0.12.7'])
+	install_requires = ['bottle>=0.12.7'],
+	tests_require = ['bottle>=0.12.7'])
