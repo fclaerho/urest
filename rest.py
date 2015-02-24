@@ -2,7 +2,7 @@
 
 "Bottle wrapper implementing REST design recommended practices"
 
-__version__ = "0.1"
+__version__ = "1.0.0"
 
 import json, abc
 
