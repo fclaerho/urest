@@ -54,8 +54,12 @@ In JSON (equivalent in XML):
 INSTALLATION
 ------------
 
-Run `pip install -i https://pypi.fclaerhout.fr/simple/ rest`
-or clone the git repository and run `python setup.py install` if the pypi repository is unavailable.
+	$ pip install -i https://pypi.fclaerhout.fr/simple/ rest
+
+or, if that repository is not available:
+
+	$ git clone $this
+	$ python setup.py install
 
 USAGE
 -----
