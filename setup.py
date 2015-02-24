@@ -2,8 +2,6 @@
 
 from setuptools import setup
 
-import rest
-
 setup(
 	name = "rest",
 	version = "1.0.0",
