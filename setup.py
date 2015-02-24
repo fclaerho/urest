@@ -6,10 +6,10 @@ import rest
 
 setup(
 	name = "rest",
-	version = rest.__version__,
+	version = "1.0.0",
 	license = "MIT",
 	py_modules = ["rest"],
 	test_suite = "selftest",
-	description = path.__doc__.splitlines()[0],
+	description = "Bottle wrapper implementing REST design recommended practices",
 	install_requires = ['bottle>=0.12.7'],
 	tests_require = ['bottle>=0.12.7'])
