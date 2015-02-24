@@ -10,4 +10,4 @@ setup(
 	test_suite = "selftest",
 	description = "Bottle wrapper implementing REST design recommended practices",
 	tests_require = ["bottle>=0.12.7"],
-	install_requires = tests_require)
+	install_requires = ["bottle>=0.12.7"])
