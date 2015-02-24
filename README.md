@@ -51,18 +51,24 @@ In JSON (equivalent in XML):
   * On success: {"success": true, "result": %any%}
   * On failure: {"success": false, "exception": %string%}
 
+INSTALLATION
+------------
+
+Run `pip install -i https://pypi.fclaerhout.fr/simple/ rest`
+or clone the git repository and run `python setup.py install` if the pypi repository is unavailable.
+
 USAGE
 -----
 
-  * Checkout the repository
-  * `import rest`
-  * Implement the `Resources()` base class for each of your resources.
-    * `select()`, `update()` and `delete()` return the response body.
-    * `create()` returns a tuple (body, querystring, asynchronous)
-      * querystring: used to build the response `Location` header
-      * asynchronous: if True, use 202 as response status code, 201 otherwise
-  * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
-  * `.register([path], [model])` each URL path againts a model instance
+  * In your code:
+    * `import rest`
+    * Implement the `Resources()` base class for each of your resources.
+      * `select()`, `update()` and `delete()` return the response body.
+      * `create()` returns a tuple (body, querystring, asynchronous)
+        * querystring: used to build the response `Location` header
+        * asynchronous: if True, use 202 as response status code, 201 otherwise
+    * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
+    * `.register([path], [model])` each URL path againts a model instance
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
   * Connect to your endpoint at http://%hostname%[:%port%]
 
