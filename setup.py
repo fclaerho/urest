@@ -1,12 +1,10 @@
 # copyright (c) 2015 fclaerhout.fr, released under the MIT license.
 
-import setuptools, os
+import setuptools, sys
 
-open("bottle.py", "w")
+sys.modules["bottle"] = object()
 
 import rest
-
-os.remove("bottle.py")
 
 setuptools.setup(
 	name = "rest",
