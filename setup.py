@@ -1,10 +1,12 @@
 # copyright (c) 2015 fclaerhout.fr, released under the MIT license.
 
-from setuptools import setup
+import setuptools, sys
 
-from rest import __doc__, __version__
+sys.modules["bottle"] = None
 
-setup(
+import rest
+
+setuptools.setup(
 	name = "rest",
 	version = rest.__version__,
 	license = "MIT",
