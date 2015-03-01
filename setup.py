@@ -2,12 +2,14 @@
 
 from setuptools import setup
 
+from rest import __doc__, __version__
+
 setup(
 	name = "rest",
-	version = "1.0.0",
+	version = rest.__version__,
 	license = "MIT",
 	py_modules = ["rest"],
 	test_suite = "selftest",
-	description = "Bottle wrapper implementing REST design recommended practices",
+	description = rest.__doc__.splitlines()[0],
 	tests_require = ["bottle>=0.12.7"],
 	install_requires = ["bottle>=0.12.7"])
