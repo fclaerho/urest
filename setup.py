@@ -4,10 +4,12 @@ import setuptools, subprocess
 
 setuptools.setup(
 	name = "rest",
-	version = "1.0.0",
+	author = "florent claerhout",
 	license = "MIT",
+	version = "1.0.0",
 	py_modules = ["rest"],
 	test_suite = "selftest",
 	description = "Bottle wrapper implementing REST design recommended practices",
+	author_email = "contact@fclaerhout.fr",
 	tests_require = ["bottle>=0.12.7"],
 	install_requires = ["bottle>=0.12.7"])

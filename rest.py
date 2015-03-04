@@ -1,9 +1,5 @@
 # copyright (c) 2014-2015 fclaerhout.fr, released under the MIT license.
 
-"Bottle wrapper implementing REST design recommended practices"
-
-__version__ = "1.0.0"
-
 import json, abc
 
 import bottle # 3rd-party
