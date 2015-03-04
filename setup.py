@@ -4,7 +4,7 @@ import setuptools, subprocess
 
 setuptools.setup(
 	name = "rest",
-	author = "florent claerhout",
+	author = "fclaerhout.fr",
 	license = "MIT",
 	version = "1.0.0",
 	py_modules = ["rest"],
