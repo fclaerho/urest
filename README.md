@@ -4,12 +4,9 @@
 	 |_|_\___/__/\__|
 
 **Tiny REST Framework for Python**
-built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementing REST design recommended practices[1][2].
-Of course you'll need Bottle as dependency, get it from your usual python package retailer
-or use the version bundled with rest in the `vendor/` subdirectory.
-
-  * [1] http://www.restapitutorial.com
-  * [2] https://bourgeois.me/rest/
+built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementing REST design recommended practices:
+  * http://www.restapitutorial.com
+  * https://bourgeois.me/rest/
 
 HTTP STATUS CODES
 -----------------
