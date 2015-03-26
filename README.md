@@ -8,8 +8,7 @@ built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementin
   * http://www.restapitutorial.com
   * https://bourgeois.me/rest/
 
-HTTP STATUS CODES
------------------
+**HTTP STATUS CODES**
 
   * 200: OK — returned if no specific 2xx status code fits
   * 201: Created — the resource has been created
@@ -24,15 +23,13 @@ HTTP STATUS CODES
   * 423: Locked — the resource is in use and cannot be updated/deleted
   * 501: Not Implemented
 
-I/O FORMAT
-----------
+**I/O FORMAT**
 
 At the moment, two formats are supported: `application/json` and `application/xml`
   * The HTTP `Content-Type` header defines the request body format
   * The HTTP `Accept` header defines the response body formats
 
-HTTP CRUD
----------
+**HTTP CRUD**
 
   * Selection: GET /%resources%?[&fields=][&limit=][&offset=]…
   * Creation:
@@ -41,15 +38,13 @@ HTTP CRUD
   * Update: PUT /%resources% and body contains the payload
   * Deletion: DELETE /%resources% {"name": %string%}
 
-RESPONSE BODY STRUCTURE
------------------------
+**RESPONSE BODY STRUCTURE**
 
 In JSON (equivalent in XML):
   * On success: {"success": true, "result": %any%}
   * On failure: {"success": false, "exception": %string%}
 
-INSTALLATION
-------------
+**INSTALLATION**
 
 	$ pip install -i https://pypi.fclaerhout.fr/simple/ rest
 
@@ -58,8 +53,7 @@ or, if that repository is not available:
 	$ git clone $this
 	$ python setup.py install
 
-USAGE
------
+**USAGE**
 
   * In your code:
     * `import rest`
@@ -73,8 +67,7 @@ USAGE
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
   * Connect to your endpoint at http://%hostname%[:%port%]
 
-EXCEPTIONS
-----------
+**EXCEPTIONS**
 
 For a proper handling of the HTTP status codes:
 
@@ -102,8 +95,7 @@ For a proper handling of the HTTP status codes:
 
 Any other exception will be handled as 500.
 
-EXAMPLE
--------
+**EXAMPLE**
 
 	import rest
 	class Hello(rest.Resources):
