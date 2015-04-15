@@ -50,7 +50,7 @@ In JSON (equivalent in XML):
 INSTALLATION
 ------------
 
-	$ pip install -i https://pypi.fclaerhout.fr/simple/ rest
+	$ pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ rest
 
 or, if that repository is not available:
 
