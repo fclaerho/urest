@@ -8,7 +8,7 @@ setuptools.setup(
 	license = "MIT",
 	version = "1.0.0",
 	py_modules = ["rest"],
-	test_suite = "selftest",
+	test_suite = "test",
 	description = "Bottle wrapper implementing REST design recommended practices",
 	author_email = "contact@fclaerhout.fr",
 	tests_require = ["bottle>=0.12.7"],
