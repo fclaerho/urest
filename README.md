@@ -50,12 +50,16 @@ In JSON (equivalent in XML):
 INSTALLATION
 ------------
 
-	$ pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ rest
+	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ rest
 
 or, if that repository is not available:
 
 	$ git clone $this
-	$ python setup.py install
+	$ sudo python setup.py install
+
+To uninstall:
+
+	$ sudo pip uninstall rest
 
 USAGE
 -----
