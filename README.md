@@ -50,7 +50,7 @@ In JSON (equivalent in XML):
 End-user Installation
 ---------------------
 
-	$ pip install --user --extra-index-url https://pypi.fclaerhout.fr/simple/ --pre arb
+	$ pip install --user --extra-index-url https://pypi.fclaerhout.fr/simple/ --pre rest
 	$ export PATH="$PATH:~/.local/bin"
 
 or, if that repository is not available:
@@ -60,7 +60,7 @@ or, if that repository is not available:
 
 To uninstall:
 
-	$ pip uninstall arb
+	$ pip uninstall rest
 
 Developer Installation
 ----------------------
