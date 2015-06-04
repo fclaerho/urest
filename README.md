@@ -7,7 +7,7 @@ Tiny REST Framework for Python built as a [Bottle](http://bottlepy.org/docs/dev/
   * http://www.restapitutorial.com
   * https://bourgeois.me/rest/
 
-HTTP STATUS CODES
+HTTP Status Codes
 -----------------
 
   * 200: OK — returned if no specific 2xx status code fits
@@ -23,7 +23,7 @@ HTTP STATUS CODES
   * 423: Locked — the resource is in use and cannot be updated/deleted
   * 501: Not Implemented
 
-I/O FORMAT
+I/O Format
 ----------
 
 At the moment, two formats are supported: `application/json` and `application/xml`
@@ -40,28 +40,40 @@ HTTP CRUD
   * Update: PUT /%resources% and body contains the payload
   * Deletion: DELETE /%resources% {"name": %string%}
 
-RESPONSE BODY STRUCTURE
+Response Body Structure
 -----------------------
 
 In JSON (equivalent in XML):
   * On success: {"success": true, "result": %any%}
   * On failure: {"success": false, "exception": %string%}
 
-INSTALLATION
-------------
+End-user Installation
+---------------------
 
-	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ rest
+	$ pip install --user --extra-index-url https://pypi.fclaerhout.fr/simple/ --pre arb
+	$ export PATH="$PATH:~/.local/bin"
 
 or, if that repository is not available:
 
 	$ git clone $this
-	$ sudo python setup.py install
+	$ sudo python setup.py install --user
 
 To uninstall:
 
-	$ sudo pip uninstall rest
+	$ pip uninstall arb
 
-USAGE
+Developer Installation
+----------------------
+
+To install:
+
+	$ python setup.py develop --user
+
+To uninstall:
+
+	$ python setup.py develop --user --uninstall
+
+Usage
 -----
 
   * In your code:
@@ -76,7 +88,7 @@ USAGE
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
   * Connect to your endpoint at http://%hostname%[:%port%]
 
-EXCEPTIONS
+Exceptions
 ----------
 
 For a proper handling of the HTTP status codes:
@@ -105,7 +117,7 @@ For a proper handling of the HTTP status codes:
 
 Any other exception will be handled as 500.
 
-EXAMPLE
+Example
 -------
 
 	import rest
