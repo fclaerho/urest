@@ -6,7 +6,7 @@ setuptools.setup(
 	name = "rest",
 	author = "fclaerhout.fr",
 	license = "MIT",
-	version = "1R",
+	version = "1",
 	py_modules = ["rest"],
 	test_suite = "test",
 	description = "Bottle wrapper implementing REST design recommended practices",
