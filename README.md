@@ -42,8 +42,8 @@ In JSON (equivalent in XML):
   * On success: {"success": true, "result": %any%}
   * On failure: {"success": false, "exception": %string%}
 
-End-user Installation
----------------------
+Installation
+------------
 
 	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
 
@@ -55,17 +55,6 @@ or, if that repository is not available:
 To uninstall:
 
 	$ sudo pip uninstall pyrest
-
-Developer Installation
-----------------------
-
-To install:
-
-	$ sudo python setup.py develop
-
-To uninstall:
-
-	$ sudo python setup.py develop --uninstall
 
 Usage
 -----
