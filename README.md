@@ -1,9 +1,4 @@
-	  ___        _
-	 | _ \___ __| |_
-	 |   / -_|_-<  _|
-	 |_|_\___/__/\__|
-
-Tiny REST Framework for Python built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementing REST design recommended practices:
+Tiny Python REST Framework built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementing REST design recommended practices:
   * http://www.restapitutorial.com
   * https://bourgeois.me/rest/
 
@@ -50,7 +45,7 @@ In JSON (equivalent in XML):
 End-user Installation
 ---------------------
 
-	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ rest
+	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
 
 or, if that repository is not available:
 
@@ -59,7 +54,7 @@ or, if that repository is not available:
 
 To uninstall:
 
-	$ sudo pip uninstall rest
+	$ sudo pip uninstall pyrest
 
 Developer Installation
 ----------------------
