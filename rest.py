@@ -28,15 +28,15 @@ class Resources(object):
 
 	@abc.abstractmethod
 	def create(self, body):
-		raise NotImplementedEror("create not implemented")
+		raise NotImplementedError("create not implemented")
 
 	@abc.abstractmethod
 	def update(self, body):
-		raise NotImplementedEror("update not implemented")
+		raise NotImplementedError("update not implemented")
 
 	@abc.abstractmethod
 	def delete(self, body):
-		raise NotImplementedEror("delete not implemented")
+		raise NotImplementedError("delete not implemented")
 
 class xml:
 	"poorman xml serializer"
@@ -81,12 +81,13 @@ class Server(object):
 	def __init__(self, hostname = "0.0.0.0", port = 8080, json_encoder_cls = None):
 		self.json_encoder_cls = json_encoder_cls
 		self.hostname = hostname
-		self.thread = None
 		self.port = port
 
-	def Response(self, obj, status, headers):
+	def _Response(self, obj, status, headers):
+		"configure response and return data"
 		accepted = bottle.request.headers.get("Accept")
 		supported = ("application/json", "application/xml")
+		# at least one accepted content-types is supported:
 		if not accepted or any(map(lambda ct: ct in accepted, supported)):
 			bottle.response.status = status
 			bottle.response.headers.update(headers)
@@ -96,18 +97,19 @@ class Server(object):
 			elif "application/xml" in accepted:
 				bottle.response.content_type = "application/xml"
 				return xml.dumps(obj)
+		# accepted content-types are not supported
 		else:
-			bottle.response.status = 406 # unsupported accepted content-types
+			bottle.response.status = 406
 			return None
 
 	def Success(self, result = None, status = 200, headers = None, **kwargs):
-		return self.Response(
+		return self._Response(
 			dict({"success": True, "result": result}, **kwargs),
 			status = status,
 			headers = headers or {})
 
 	def Failure(self, exception, status = 400):
-		return self.Response({
+		return self._Response({
 				"success": False,
 				"exception": "%s: %s" % (type(exception).__name__, exception),
 			},
