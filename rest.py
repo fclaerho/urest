@@ -160,9 +160,7 @@ class Server(object):
 		except Exception as e:
 			return self.Failure(e, status = 422)
 		try:
-			tpl = resources.create(body)
-			assert len(tpl) == 3, "expected 3-ary tuple as create result"
-			result, querystring, asynchronous = tpl
+			result, querystring, asynchronous = resources.create(body)
 			assert result, "create result cannot be null"
 			return self.Success(
 				result,
