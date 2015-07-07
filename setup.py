@@ -6,9 +6,12 @@ setuptools.setup(
 	name = "pyrest",
 	author = "fclaerhout.fr",
 	license = "MIT",
-	version = "1.0.1",
+	version = "1.0.2",
 	py_modules = ["rest"],
 	test_suite = "test",
 	author_email = "contact@fclaerhout.fr",
-	tests_require = ["bottle>=0.12.7"],
-	install_requires = ["bottle>=0.12.7"])
+	tests_require = ["bottle>=0.12.7", "pyutils"],
+	install_requires = ["bottle>=0.12.7"],
+	dependency_links = [
+		"https://pypi.fclaerhout.fr/simple/pyutils",
+	])
