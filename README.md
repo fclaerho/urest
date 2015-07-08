@@ -29,11 +29,12 @@ HTTP CRUD
 ---------
 
   * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`
+    NOTICE: limit is 20 by default.
   * Creation:
-    `POST /%resources%` and `body` contains the payload
-    On successful creation, the response `Location` header is set
+    `POST /%resources%` and `body` contains the payload.
+    On successful creation, the response `Location` header is set.
   * Update: `PUT /%resources%` and `body` contains the payload
-  * Deletion: `DELETE /%resources%` and `body`contains `{"name": %string%}`
+  * Deletion: `DELETE /%resources%` and `body` contains `{"name": %string%}`
 
 Response Body Structure
 -----------------------
