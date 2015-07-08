@@ -30,7 +30,7 @@ class Test(unittest.TestCase):
 		if not SERVER:
 			SERVER = rest.Server(port = PORT)
 			SERVER.register("/hello", Hello())
-			utils.background(None, SERVER.run)
+			utils.background(None, SERVER.run, verbose = False)
 
 	def test_get(self):
 		res = utils.http_request(
