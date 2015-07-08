@@ -28,19 +28,19 @@ At the moment, two formats are supported: `application/json` and `application/xm
 HTTP CRUD
 ---------
 
-  * Selection: GET /%resources%?[&fields=][&limit=][&offset=]…
+  * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`
   * Creation:
-    POST /%resources% and body contains the payload
+    `POST /%resources%` and `body` contains the payload
     On successful creation, the response `Location` header is set
-  * Update: PUT /%resources% and body contains the payload
-  * Deletion: DELETE /%resources% {"name": %string%}
+  * Update: `PUT /%resources%` and `body` contains the payload
+  * Deletion: `DELETE /%resources%` and `body`contains `{"name": %string%}`
 
 Response Body Structure
 -----------------------
 
 In JSON (equivalent in XML):
-  * On success: {"success": true, "result": %any%}
-  * On failure: {"success": false, "exception": %string%}
+  * On success: `{"success": true, "result": %any%}`
+  * On failure: `{"success": false, "exception": %string%}`
 
 Installation
 ------------
