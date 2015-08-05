@@ -119,10 +119,10 @@ class Server(object):
 	def select(self, resources):
 		try:
 			# parse query string:
-			kwargs = {}
 			offset = 0
-			where = {}
 			limit = 20
+			xcond = {}
+			cond = {}
 			for key, value in bottle.request.query.items():
 				if key == "limit":
 					limit = int(value)
@@ -131,15 +131,15 @@ class Server(object):
 				elif key == "fields":
 					fields = value.split(",")
 				elif key.startswith("x-"):
-					kwargs[key[2:]] = value
+					xcond[key[2:]] = value
 				else:
-					where[key] = value
-			rows = resources.select(**kwargs)
+					cond[key] = value
+			rows = resources.select(**xcond)
 			assert isinstance(rows, list), "select is expected to return a list"
 			# select range of rows:
 			rows = rows[offset:offset + limit]
 			# select matching rows:
-			for key, value in where.items():
+			for key, value in cond.items():
 				rows = filter(
 					lambda row: key in row and type(row[key])(value) == row[key],
 					rows)
