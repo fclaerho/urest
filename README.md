@@ -46,7 +46,7 @@ Usage
         * querystring: used to build the response `Location` header
         * asynchronous: if True, use 202 as response status code, 201 otherwise
     * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
-    * `.register([path], [model])` each URL path againts a model instance
+    * `.register([path], [resources])` each URL path againts a Resources instance
   * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
   * Connect to your endpoint at http://%hostname%[:%port%]
 
