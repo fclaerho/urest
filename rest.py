@@ -169,61 +169,61 @@ class Server(object):
 				status = 202 if asynchronous else 201,
 				headers = {"Location": "%s?%s" % (bottle.request.url, querystring)})
 		except NotImplementedError as exc:
-			return self.Failure(e, status = 501)
+			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
-			return self.Failure(e, status = 405)
+			return self.Failure(exc, status = 405)
 		except ValidationError as exc:
-			return self.Failure(e, status = 422)
+			return self.Failure(exc, status = 422)
 		except ResourceExists as exc:
-			return self.Failure(e, status = 409)
+			return self.Failure(exc, status = 409)
 		except Exception as exc:
-			return self.Failure(e, status = 500)
+			return self.Failure(exc, status = 500)
 
 	def update(self, resources):
 		try:
 			body = self.parse_body()
 		except FormatError as exc:
-			return self.Failure(e, status = 415)
+			return self.Failure(exc, status = 415)
 		except Exception as exc:
-			return self.Failure(e, status = 422)
+			return self.Failure(exc, status = 422)
 		try:
 			result = resources.update(body)
 			return self.Success(result, status = 200 if result else 204)
 		except NotImplementedError as exc:
-			return self.Failure(e, status = 501)
+			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
-			return self.Failure(e, status = 405)
+			return self.Failure(exc, status = 405)
 		except ValidationError as exc:
-			return self.Failure(e, status = 422)
+			return self.Failure(exc, status = 422)
 		except NoSuchResource as exc:
-			return self.Failure(e, status = 404)
+			return self.Failure(exc, status = 404)
 		except LockedResourceError as exc:
-			return self.Failure(e, status = 423)
+			return self.Failure(exc, status = 423)
 		except Exception as exc:
-			return self.ailure(e, status = 500)
+			return self.Failure(exc, status = 500)
 
 	def delete(self, model):
 		try:
 			body = self.parse_body()
 		except FormatError as exc:
-			return self.Failure(e, status = 415)
+			return self.Failure(exc, status = 415)
 		except Exception as exc:
-			return self.Failure(e, status = 422)
+			return self.Failure(exc, status = 422)
 		try:
 			result = model.delete(body)
 			return self.Success(result, status = 200 if result else 204)
 		except NotImplementedError as exc:
-			return self.Failure(e, status = 501)
+			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
-			return self.Failure(e, status = 405)
+			return self.Failure(exc, status = 405)
 		except ValidationError as exc:
-			return self.Failure(e, status = 422)
+			return self.Failure(exc, status = 422)
 		except NoSuchResource as exc:
-			return self.Failure(e, status = 404)
+			return self.Failure(exc, status = 404)
 		except LockedResourceError as exc:
-			return self.Failure(e, status = 423)
+			return self.Failure(exc, status = 423)
 		except Exception as exc:
-			return self.Failure(e, status = 500)
+			return self.Failure(exc, status = 500)
 
 	def register(self, path, resources):
 		bottle.route(path, "GET", lambda: self.select(resources))
