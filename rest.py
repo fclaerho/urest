@@ -127,9 +127,7 @@ class Server(object):
 			# select matching rows:
 			for key, value in bottle.request.query.items():
 				if key not in ("fields", "offset", "limit"):
-					rows = filter(
-						lambda row: key in row and str(row[key]) == value,
-						rows)
+					rows = filter(lambda row: key in row and str(row[key]) == value, rows)
 			# filter fields:
 			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
 			rows = map(
@@ -159,9 +157,9 @@ class Server(object):
 		try:
 			body = self.parse_body()
 		except FormatError as exc:
-			return self.Failure(e, status = 415)
+			return self.Failure(exc, status = 415)
 		except Exception as exc:
-			return self.Failure(e, status = 422)
+			return self.Failure(exc, status = 422)
 		try:
 			result, querystring, asynchronous = resources.create(body)
 			assert result, "create result cannot be null"

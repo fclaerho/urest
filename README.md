@@ -73,12 +73,16 @@ At the moment, two formats are supported: `application/json` and `application/xm
 
 ### HTTP CRUD
 
-  * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`
+  * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`;
+    expect 200 on success.
   * Creation:
     `POST /%resources%` and `body` contains the payload.
     On successful creation, the response `Location` header is set.
-  * Update: `PUT /%resources%` and `body` contains the payload
-  * Deletion: `DELETE /%resources%` and `body` contains `{"name": %string%}`
+    Expect 201 (or 202 if async) on success.
+  * Update: `PUT /%resources%` and `body` contains the payload;
+    expect 200 (or 204 on empty body) on success.
+  * Deletion: `DELETE /%resources%` and `body` contains `{"name": %string%}`;
+    expect 200 (or 204 on empty body) on success.
 
 ### RESPONSE STRUCTURE
 
