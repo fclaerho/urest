@@ -4,16 +4,12 @@ import unittest, json
 
 import bottle, rest, utils # 3rd-party
 
-MSG = "Hello, World!"
+MSG = ["Hello, World!", "blahblah", "lorem ipsum"]
 
 class Hello(rest.Resources):
 
 	def select(self, **kwargs):
-		return [
-			{"id": 0, "msg": "wrong"},
-			{"id": 1, "msg": MSG},
-			{"id": 2, "msg": "nope"},
-		]
+		return [{"id": i, "msg": MSG[i]} for i in range(len(MSG))]
 
 	def create(self, body):
 		raise MethodNotAllowed
@@ -36,15 +32,39 @@ class Test(unittest.TestCase):
 			SERVER.register("/hello", Hello())
 			utils.background(None, SERVER.run, verbose = False)
 
-	def test_get(self):
+	def _get(self, querystring):
 		res = utils.http_request(
 			hostname = "localhost",
 			port = PORT,
 			method = "GET",
-			path = "/hello?id=1")
+			headers = {"Accept": "application/json"},
+			path = "/hello%s" % querystring)
 		self.assertEqual(res.status, 200)
-		body = json.loads(res.read())
+		return json.loads(res.read())
+
+	def test_get_limit(self):
+		body = self._get("?limit=1")
 		self.assertEqual(body["success"], True)
-		self.assertEqual(body["result"], [{"id": 1, "msg": MSG}])
+		self.assertEqual(body["result"], [{"id": 0, "msg": MSG[0]}])
+
+	def test_get_id(self):
+		body = self._get("?id=1")
+		self.assertEqual(body["success"], True)
+		self.assertEqual(body["result"], [{"id": 1, "msg": MSG[1]}])
+
+	def test_get_offset(self):
+		body = self._get("?offset=2")
+		self.assertEqual(body["success"], True)
+		self.assertEqual(body["result"], [{"id": 2, "msg": MSG[2]}])
+
+	def test_get_limit_offset(self):
+		body = self._get("?offset=1&limit=1")
+		self.assertEqual(body["success"], True)
+		self.assertEqual(body["result"], [{"id": 1, "msg": MSG[1]}])
+
+	def test_get_offset_fields(self):
+		body = self._get("?offset=2&fields=msg")
+		self.assertEqual(body["success"], True)
+		self.assertEqual(body["result"], [{"msg": MSG[2]}])
 
 if __name__ == "__main__": unittest.main(verbosity = 2)

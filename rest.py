@@ -120,20 +120,21 @@ class Server(object):
 		try:
 			rows = resources.select(**bottle.request.query)
 			assert isinstance(rows, list), "select is expected to return a list"
+			# select subset of rows:
+			offset = int(bottle.request.query.offset or 0)
+			limit = int(bottle.request.query.limit or len(rows))
+			rows = rows[offset:offset + limit]
+			# select matching rows:
 			for key, value in bottle.request.query.items():
-				if key == "offset":
-					rows = rows[int(value):]
-				elif key == "limit":
-					rows = rows[:int(value)]
-				elif key == "fields":
-					fields = value.split(",")
-					rows = map(
-						lambda row: {k: row[k] for k in row if k in fields},
-						rows)
-				else:
+				if key not in ("fields", "offset", "limit"):
 					rows = filter(
 						lambda row: key in row and str(row[key]) == value,
 						rows)
+			# filter fields:
+			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
+			rows = map(
+				lambda row: {key: value for key,value in row.items() if not fields or key in fields},
+				rows)
 			return self.Success(rows, status = 200)
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)
