@@ -84,7 +84,7 @@ class Server(object):
 		self.port = port
 
 	def _Response(self, obj, status, headers):
-		"configure response and return data"
+		"configure bottle response and return data"
 		accepted = bottle.request.headers.get("Accept")
 		supported = ("application/json", "application/xml")
 		# at least one accepted content-types is supported:
@@ -118,29 +118,31 @@ class Server(object):
 
 	def select(self, resources):
 		try:
-			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else None
-			limit = int(bottle.request.query.limit or 20)
-			offset = int(bottle.request.query.offset or 0)
 			rows = resources.select(**bottle.request.query)
-			if len(rows) > limit:
-				rows = rows[offset:offset + limit]
-			if fields:
-				def filtered(row):
-					res = {}
-					for key in row:
-						if key in fields:
-							res[key] = row[key]
-					return res
-				rows = map(filtered, rows)
+			assert isinstance(rows, list), "select is expected to return a list"
+			for key, value in bottle.request.query.items():
+				if key == "offset":
+					rows = rows[int(value):]
+				elif key == "limit":
+					rows = rows[:int(value)]
+				elif key == "fields":
+					fields = value.split(",")
+					rows = map(
+						lambda row: {k: row[k] for k in row if k in fields},
+						rows)
+				else:
+					rows = filter(
+						lambda row: key in row and str(row[key]) == value,
+						rows)
 			return self.Success(rows, status = 200)
-		except NotImplementedError as e:
-			return self.Failure(e, status = 501)
-		except MethodNotAllowed as e:
-			return self.Failure(e, status = 405)
-		except ValidationError as e:
-			return self.Failure(e, status = 400)
-		except Exception as e:
-			return self.Failure(e, status = 500)
+		except NotImplementedError as exc:
+			return self.Failure(exc, status = 501)
+		except MethodNotAllowed as exc:
+			return self.Failure(exc, status = 405)
+		except ValidationError as exc:
+			return self.Failure(exc, status = 400)
+		except Exception as exc:
+			return self.Failure(exc, status = 500)
 
 	def parse_body(self):
 		"return parsed object on success, raise FormatError or SyntaxError on failure"
@@ -155,9 +157,9 @@ class Server(object):
 	def create(self, resources):
 		try:
 			body = self.parse_body()
-		except FormatError as e:
+		except FormatError as exc:
 			return self.Failure(e, status = 415)
-		except Exception as e:
+		except Exception as exc:
 			return self.Failure(e, status = 422)
 		try:
 			result, querystring, asynchronous = resources.create(body)
@@ -166,61 +168,61 @@ class Server(object):
 				result,
 				status = 202 if asynchronous else 201,
 				headers = {"Location": "%s?%s" % (bottle.request.url, querystring)})
-		except NotImplementedError as e:
+		except NotImplementedError as exc:
 			return self.Failure(e, status = 501)
-		except MethodNotAllowed as e:
+		except MethodNotAllowed as exc:
 			return self.Failure(e, status = 405)
-		except ValidationError as e:
+		except ValidationError as exc:
 			return self.Failure(e, status = 422)
-		except ResourceExists as e:
+		except ResourceExists as exc:
 			return self.Failure(e, status = 409)
-		except Exception as e:
+		except Exception as exc:
 			return self.Failure(e, status = 500)
 
 	def update(self, resources):
 		try:
 			body = self.parse_body()
-		except FormatError as e:
+		except FormatError as exc:
 			return self.Failure(e, status = 415)
-		except Exception as e:
+		except Exception as exc:
 			return self.Failure(e, status = 422)
 		try:
 			result = resources.update(body)
 			return self.Success(result, status = 200 if result else 204)
-		except NotImplementedError as e:
+		except NotImplementedError as exc:
 			return self.Failure(e, status = 501)
-		except MethodNotAllowed as e:
+		except MethodNotAllowed as exc:
 			return self.Failure(e, status = 405)
-		except ValidationError as e:
+		except ValidationError as exc:
 			return self.Failure(e, status = 422)
-		except NoSuchResource as e:
+		except NoSuchResource as exc:
 			return self.Failure(e, status = 404)
-		except LockedResourceError as e:
+		except LockedResourceError as exc:
 			return self.Failure(e, status = 423)
-		except Exception as e:
+		except Exception as exc:
 			return self.ailure(e, status = 500)
 
 	def delete(self, model):
 		try:
 			body = self.parse_body()
-		except FormatError as e:
+		except FormatError as exc:
 			return self.Failure(e, status = 415)
-		except Exception as e:
+		except Exception as exc:
 			return self.Failure(e, status = 422)
 		try:
 			result = model.delete(body)
 			return self.Success(result, status = 200 if result else 204)
-		except NotImplementedError as e:
+		except NotImplementedError as exc:
 			return self.Failure(e, status = 501)
-		except MethodNotAllowed as e:
+		except MethodNotAllowed as exc:
 			return self.Failure(e, status = 405)
-		except ValidationError as e:
+		except ValidationError as exc:
 			return self.Failure(e, status = 422)
-		except NoSuchResource as e:
+		except NoSuchResource as exc:
 			return self.Failure(e, status = 404)
-		except LockedResourceError as e:
+		except LockedResourceError as exc:
 			return self.Failure(e, status = 423)
-		except Exception as e:
+		except Exception as exc:
 			return self.Failure(e, status = 500)
 
 	def register(self, path, resources):

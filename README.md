@@ -1,4 +1,4 @@
-Tiny Python REST Framework built as a [Bottle](http://bottlepy.org/docs/dev/index.html) wrapper implementing REST design recommended practices:
+Tiny Python REST Framework built over [Bottle](http://bottlepy.org/docs/dev/index.html) and implementing REST good practices:
   * http://www.restapitutorial.com
   * https://bourgeois.me/rest/
 
@@ -29,7 +29,6 @@ HTTP CRUD
 ---------
 
   * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`
-    NOTICE: limit is 20 by default.
   * Creation:
     `POST /%resources%` and `body` contains the payload.
     On successful creation, the response `Location` header is set.
@@ -107,7 +106,7 @@ Example
 	import rest
 	class Hello(rest.Resources):
 		def select(self, **kwargs):
-			return {"msg": "hello world!"}
+			return [{"msg": "hello world!"}]
 		def create(self, body):
 			raise MethodNotAllowed
 		def update(self, body):

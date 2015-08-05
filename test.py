@@ -9,7 +9,11 @@ MSG = "Hello, World!"
 class Hello(rest.Resources):
 
 	def select(self, **kwargs):
-		return {"msg": MSG}
+		return [
+			{"id": 0, "msg": "wrong"},
+			{"id": 1, "msg": MSG},
+			{"id": 2, "msg": "nope"},
+		]
 
 	def create(self, body):
 		raise MethodNotAllowed
@@ -37,10 +41,10 @@ class Test(unittest.TestCase):
 			hostname = "localhost",
 			port = PORT,
 			method = "GET",
-			path = "/hello")
+			path = "/hello?id=1")
 		self.assertEqual(res.status, 200)
 		body = json.loads(res.read())
 		self.assertEqual(body["success"], True)
-		self.assertEqual(body["result"], {"msg": MSG})
+		self.assertEqual(body["result"], [{"id": 1, "msg": MSG}])
 
 if __name__ == "__main__": unittest.main(verbosity = 2)
