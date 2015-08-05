@@ -120,7 +120,7 @@ class Server(object):
 		try:
 			# parse query string:
 			offset = 0
-			limit = 20
+			limit = None
 			xcond = {}
 			cond = {}
 			for key, value in bottle.request.query.items():
@@ -137,7 +137,10 @@ class Server(object):
 			rows = resources.select(**xcond)
 			assert isinstance(rows, list), "select is expected to return a list"
 			# select range of rows:
-			rows = rows[offset:offset + limit]
+			if offset:
+				rows = rows[offset:]
+			if limit:
+				rows = rows[:limit]
 			# select matching rows:
 			for key, value in cond.items():
 				rows = filter(

@@ -6,7 +6,7 @@ setuptools.setup(
 	name = "pyrest",
 	author = "fclaerhout.fr",
 	license = "MIT",
-	version = "1.4.0",
+	version = "1.5.0",
 	py_modules = ["rest"],
 	test_suite = "test",
 	author_email = "contact@fclaerhout.fr",
