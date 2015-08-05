@@ -5,33 +5,33 @@ Tiny Python REST Framework built over [Bottle](http://bottlepy.org/docs/dev/inde
 Example
 -------
 
-  import rest
-  class Hello(rest.Resources):
-    def select(self, **kwargs):
-      return [{"msg": "hello world!"}]
-    def create(self, body):
-      raise MethodNotAllowed
-    def update(self, body):
-      raise MethodNotAllowed
-    def delete(self, body):
-      raise MethodNotAllowed
-  server = rest.Server()
-  server.register("/hello", Hello())
-  server.run()
+	import rest
+	class Hello(rest.Resources):
+		def select(self, **kwargs):
+			return [{"msg": "hello world!"}]
+		def create(self, body):
+			raise MethodNotAllowed
+		def update(self, body):
+			raise MethodNotAllowed
+		def delete(self, body):
+			raise MethodNotAllowed
+	server = rest.Server()
+	server.register("/hello", Hello())
+	server.run()
 
 Installation
 ------------
 
-  $ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
+	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
 
 or, if that repository is not available:
 
-  $ git clone $this
-  $ sudo python setup.py install
+	$ git clone $this
+	$ sudo python setup.py install
 
 To uninstall:
 
-  $ sudo pip uninstall pyrest
+	$ sudo pip uninstall pyrest
 
 Usage
 -----
