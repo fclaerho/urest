@@ -2,8 +2,55 @@ Tiny Python REST Framework built over [Bottle](http://bottlepy.org/docs/dev/inde
   * http://www.restapitutorial.com
   * https://bourgeois.me/rest/
 
-HTTP Status Codes
------------------
+Example
+-------
+
+  import rest
+  class Hello(rest.Resources):
+    def select(self, **kwargs):
+      return [{"msg": "hello world!"}]
+    def create(self, body):
+      raise MethodNotAllowed
+    def update(self, body):
+      raise MethodNotAllowed
+    def delete(self, body):
+      raise MethodNotAllowed
+  server = rest.Server()
+  server.register("/hello", Hello())
+  server.run()
+
+Installation
+------------
+
+  $ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
+
+or, if that repository is not available:
+
+  $ git clone $this
+  $ sudo python setup.py install
+
+To uninstall:
+
+  $ sudo pip uninstall pyrest
+
+Usage
+-----
+
+### OVERVIEW
+
+  * In your code:
+    * `import rest`
+    * Implement the `Resources()` base class for each of your resources.
+      * `select()`, `update()` and `delete()` return the response body.
+      * `create()` returns a tuple (body, querystring, asynchronous)
+        * querystring: used to build the response `Location` header
+        * asynchronous: if True, use 202 as response status code, 201 otherwise
+    * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
+    * `.register([path], [model])` each URL path againts a model instance
+  * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
+  * Connect to your endpoint at http://%hostname%[:%port%]
+
+### HTTP STATUS CODES
 
   * 200: OK — returned if no specific 2xx status code fits
   * 201: Created — the resource has been created
@@ -18,15 +65,13 @@ HTTP Status Codes
   * 423: Locked — the resource is in use and cannot be updated/deleted
   * 501: Not Implemented
 
-I/O Format
-----------
+### I/O FORMAT
 
 At the moment, two formats are supported: `application/json` and `application/xml`
   * The HTTP `Content-Type` header defines the request body format
   * The HTTP `Accept` header defines the response body formats
 
-HTTP CRUD
----------
+### HTTP CRUD
 
   * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`
   * Creation:
@@ -35,44 +80,13 @@ HTTP CRUD
   * Update: `PUT /%resources%` and `body` contains the payload
   * Deletion: `DELETE /%resources%` and `body` contains `{"name": %string%}`
 
-Response Body Structure
------------------------
+### RESPONSE STRUCTURE
 
 In JSON (equivalent in XML):
   * On success: `{"success": true, "result": %any%}`
   * On failure: `{"success": false, "exception": %string%}`
 
-Installation
-------------
-
-	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
-
-or, if that repository is not available:
-
-	$ git clone $this
-	$ sudo python setup.py install
-
-To uninstall:
-
-	$ sudo pip uninstall pyrest
-
-Usage
------
-
-  * In your code:
-    * `import rest`
-    * Implement the `Resources()` base class for each of your resources.
-      * `select()`, `update()` and `delete()` return the response body.
-      * `create()` returns a tuple (body, querystring, asynchronous)
-        * querystring: used to build the response `Location` header
-        * asynchronous: if True, use 202 as response status code, 201 otherwise
-    * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
-    * `.register([path], [model])` each URL path againts a model instance
-  * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
-  * Connect to your endpoint at http://%hostname%[:%port%]
-
-Exceptions
-----------
+### EXCEPTIONS
 
 For a proper handling of the HTTP status codes:
 
@@ -99,20 +113,3 @@ For a proper handling of the HTTP status codes:
     * `LockedError` on resource in use
 
 Any other exception will be handled as 500.
-
-Example
--------
-
-	import rest
-	class Hello(rest.Resources):
-		def select(self, **kwargs):
-			return [{"msg": "hello world!"}]
-		def create(self, body):
-			raise MethodNotAllowed
-		def update(self, body):
-			raise MethodNotAllowed
-		def delete(self, body):
-			raise MethodNotAllowed
-	server = rest.Server()
-	server.register("/hello", Hello())
-	server.run()
