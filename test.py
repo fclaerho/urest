@@ -4,7 +4,7 @@ import unittest, json
 
 import bottle, rest, utils # 3rd-party
 
-MSG = ["Hello, World!", "blahblah", "lorem ipsum"]
+MSG = ["Hello, World!", "blah", "lorem ipsum"]
 
 class Hello(rest.Resources):
 
@@ -49,6 +49,11 @@ class Test(unittest.TestCase):
 
 	def test_get_id(self):
 		body = self._get("?id=1")
+		self.assertEqual(body["success"], True)
+		self.assertEqual(body["result"], [{"id": 1, "msg": MSG[1]}])
+
+	def test_get_msg(self):
+		body = self._get("?msg=%s" % MSG[1])
 		self.assertEqual(body["success"], True)
 		self.assertEqual(body["result"], [{"id": 1, "msg": MSG[1]}])
 

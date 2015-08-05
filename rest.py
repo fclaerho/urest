@@ -118,16 +118,31 @@ class Server(object):
 
 	def select(self, resources):
 		try:
-			rows = resources.select(**bottle.request.query)
+			# parse query string:
+			kwargs = {}
+			offset = 0
+			where = {}
+			limit = 20
+			for key, value in bottle.request.query.items():
+				if key == "limit":
+					limit = int(value)
+				elif key == "offset":
+					offset = int(value)
+				elif key == "fields":
+					fields = value.split(",")
+				elif key.startswith("x-"):
+					kwargs[key[2:]] = value
+				else:
+					where[key] = value
+			rows = resources.select(**kwargs)
 			assert isinstance(rows, list), "select is expected to return a list"
-			# select subset of rows:
-			offset = int(bottle.request.query.offset or 0)
-			limit = int(bottle.request.query.limit or len(rows))
+			# select range of rows:
 			rows = rows[offset:offset + limit]
 			# select matching rows:
-			for key, value in bottle.request.query.items():
-				if key not in ("fields", "offset", "limit"):
-					rows = filter(lambda row: key in row and str(row[key]) == value, rows)
+			for key, value in where.items():
+				rows = filter(
+					lambda row: key in row and type(row[key])(value) == row[key],
+					rows)
 			# filter fields:
 			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
 			rows = map(

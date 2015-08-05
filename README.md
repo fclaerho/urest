@@ -75,6 +75,8 @@ At the moment, two formats are supported: `application/json` and `application/xm
 
   * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`;
     expect 200 on success.
+    Any additional pair key=value is considered to be an exact matching;
+    Any additional pair x-key=value is forwarded as argument to the Resources.select() method.
   * Creation:
     `POST /%resources%` and `body` contains the payload.
     On successful creation, the response `Location` header is set.
