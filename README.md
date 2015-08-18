@@ -1,6 +1,8 @@
+
 Tiny Python REST Framework built over [Bottle](http://bottlepy.org/docs/dev/index.html) and implementing REST good practices:
   * http://www.restapitutorial.com
   * https://bourgeois.me/rest/
+
 
 Example
 -------
@@ -19,19 +21,22 @@ Example
 	server.register("/hello", Hello())
 	server.run()
 
+
 Installation
 ------------
 
-	$ sudo pip install --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
+  $ pip install --user --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
 
 or, if that repository is not available:
 
-	$ git clone $this
-	$ sudo python setup.py install
+  $ pip install --user git+https://github.com/fclaerho/pyrest.git
+
+The package will be installed in your [user site-packages](https://www.python.org/dev/peps/pep-0370/#specification) directory; make sure its `bin/` sub-directory is in your shell lookup path.
 
 To uninstall:
 
-	$ sudo pip uninstall pyrest
+  $ pip uninstall pyrest
+
 
 Usage
 -----
