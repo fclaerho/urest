@@ -25,17 +25,17 @@ Example
 Installation
 ------------
 
-  $ pip install --user --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
+	$ pip install --user --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
 
 or, if that repository is not available:
 
-  $ pip install --user git+https://github.com/fclaerho/pyrest.git
+	$ pip install --user git+https://github.com/fclaerho/pyrest.git
 
 The package will be installed in your [user site-packages](https://www.python.org/dev/peps/pep-0370/#specification) directory; make sure its `bin/` sub-directory is in your shell lookup path.
 
 To uninstall:
 
-  $ pip uninstall pyrest
+	$ pip uninstall pyrest
 
 
 Usage
