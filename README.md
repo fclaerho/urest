@@ -12,11 +12,11 @@ Example
 		def select(self, **kwargs):
 			return [{"msg": "hello world!"}]
 		def create(self, body):
-			raise MethodNotAllowed
+			raise rest.MethodNotAllowed
 		def update(self, body):
-			raise MethodNotAllowed
+			raise rest.MethodNotAllowed
 		def delete(self, body):
-			raise MethodNotAllowed
+			raise rest.MethodNotAllowed
 	server = rest.Server()
 	server.register("/hello", Hello())
 	server.run()
