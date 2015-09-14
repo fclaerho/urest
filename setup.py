@@ -6,7 +6,7 @@ setuptools.setup(
 	name = "urest",
 	author = "florent claerhout",
 	license = "MIT",
-	version = "1.6.0",
+	version = "2.0.0",
 	py_modules = ["urest"],
 	test_suite = "test",
 	author_email = "code@fclaerhout.fr",
