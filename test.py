@@ -2,11 +2,11 @@
 
 import unittest, json
 
-import bottle, rest, utils # 3rd-party
+import bottle, urest, fckit # 3rd-party
 
 MSG = ["Hello, World!", "blah", "lorem ipsum"]
 
-class Hello(rest.Resources):
+class Hello(urest.Resources):
 
 	def select(self, **kwargs):
 		return [{"id": i, "msg": MSG[i]} for i in range(len(MSG))]
@@ -28,12 +28,12 @@ class Test(unittest.TestCase):
 	def setUp(self):
 		global SERVER
 		if not SERVER:
-			SERVER = rest.Server(port = PORT)
+			SERVER = urest.Server(port = PORT)
 			SERVER.register("/hello", Hello())
-			utils.background(None, SERVER.run, verbose = False)
+			fckit.background(None, SERVER.run, verbose = False)
 
 	def _get(self, querystring):
-		res = utils.http_request(
+		res = fckit.http_request(
 			hostname = "localhost",
 			port = PORT,
 			method = "GET",

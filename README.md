@@ -7,17 +7,17 @@ Tiny Python REST Framework built over [Bottle](http://bottlepy.org/docs/dev/inde
 Example
 -------
 
-	import rest
-	class Hello(rest.Resources):
+	import urest
+	class Hello(urest.Resources):
 		def select(self, **kwargs):
 			return [{"msg": "hello world!"}]
 		def create(self, body):
-			raise rest.MethodNotAllowed
+			raise urest.MethodNotAllowed
 		def update(self, body):
-			raise rest.MethodNotAllowed
+			raise urest.MethodNotAllowed
 		def delete(self, body):
-			raise rest.MethodNotAllowed
-	server = rest.Server()
+			raise urest.MethodNotAllowed
+	server = urest.Server()
 	server.register("/hello", Hello())
 	server.run()
 
@@ -25,17 +25,17 @@ Example
 Installation
 ------------
 
-	$ pip install --user --extra-index-url https://pypi.fclaerhout.fr/simple/ pyrest
+	$ pip install --user urest
 
-or, if that repository is not available:
+or, if the PyPI repository is not available:
 
-	$ pip install --user git+https://github.com/fclaerho/pyrest.git
+	$ pip install --user git+https://github.com/fclaerho/urest.git
 
 The package will be installed in your [user site-packages](https://www.python.org/dev/peps/pep-0370/#specification) directory; make sure its `bin/` sub-directory is in your shell lookup path.
 
 To uninstall:
 
-	$ pip uninstall pyrest
+	$ pip uninstall urest
 
 
 Usage
@@ -44,7 +44,7 @@ Usage
 ### OVERVIEW
 
   * In your code:
-    * `import rest`
+    * `import urest`
     * Implement the `Resources()` base class for each of your resources.
       * `select()`, `update()` and `delete()` return the response body.
       * `create()` returns a tuple (body, querystring, asynchronous)

@@ -3,20 +3,17 @@
 import setuptools
 
 setuptools.setup(
-	name = "pyrest",
-	author = "fclaerhout.fr",
+	name = "urest",
+	author = "florent claerhout",
 	license = "MIT",
 	version = "1.6.0",
-	py_modules = ["rest"],
+	py_modules = ["urest"],
 	test_suite = "test",
-	author_email = "contact@fclaerhout.fr",
+	author_email = "code@fclaerhout.fr",
 	tests_require = [
 		"bottle>=0.12.7",
-		"pyutils>=9,<10a0",
+		"fckit==11.0.2",
 	],
 	install_requires = [
 		"bottle>=0.12.7",
-	],
-	dependency_links = [
-		"https://pypi.fclaerhout.fr/simple/pyutils",
 	])
