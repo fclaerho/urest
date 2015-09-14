@@ -6,6 +6,7 @@ setuptools.setup(
 	name = "urest",
 	url = "https://github.com/fclaerho/urest",
 	author = "florent claerhout",
+	description = "Tiny Python REST framework",
 	license = "MIT",
 	version = "2.1.0",
 	py_modules = ["urest"],
