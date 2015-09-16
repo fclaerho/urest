@@ -120,7 +120,7 @@ class Server(object):
 		try:
 			# parse query string:
 			offset = 0
-			limit = None
+			limit = 100 # default limit to prevent DDOS
 			xcond = {}
 			cond = {}
 			for key, value in bottle.request.query.items():

@@ -21,6 +21,8 @@ Example
 	server.register("/hello", Hello())
 	server.run()
 
+You can then curl http://localhost:8080/hello to get the msg.
+
 
 Installation
 ------------
@@ -31,7 +33,7 @@ or, if the PyPI repository is not available:
 
 	$ pip install --user git+https://github.com/fclaerho/urest.git
 
-The package will be installed in your [user site-packages](https://www.python.org/dev/peps/pep-0370/#specification) directory; make sure its `bin/` sub-directory is in your shell lookup path.
+The package will be installed in your [user site-packages](https://www.python.org/dev/peps/pep-0370/#specification) directory.
 
 To uninstall:
 
@@ -78,7 +80,8 @@ At the moment, two formats are supported: `application/json` and `application/xm
 
 ### HTTP CRUD
 
-  * Selection: `GET /%resources%?[&fields=][&limit=][&offset=]…`;
+  * Selection: `GET /%resources%?[&fields=][&limit=100][&offset=]…`;
+    NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
     expect 200 on success.
     Any additional pair key=value is considered to be an exact matching;
     Any additional pair x-key=value is forwarded as argument to the Resources.select() method.
