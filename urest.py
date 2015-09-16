@@ -23,7 +23,7 @@ class Resources(object):
 	__metaclass__ = abc.ABCMeta
 
 	@abc.abstractmethod
-	def select(self, **kwargs):
+	def select(self, limit, offset, fields, **kwargs):
 		raise NotImplementedError("select not implemented")
 
 	@abc.abstractmethod
@@ -78,8 +78,9 @@ class xml:
 
 class Server(object):
 
-	def __init__(self, hostname = "0.0.0.0", port = 8080, json_encoder_cls = None):
+	def __init__(self, json_encoder_cls = None, filtering = False, hostname = "0.0.0.0", port = 8080):
 		self.json_encoder_cls = json_encoder_cls
+		self.filtering = filtering
 		self.hostname = hostname
 		self.port = port
 
@@ -119,10 +120,10 @@ class Server(object):
 	def select(self, resources):
 		try:
 			# parse query string:
+			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
 			offset = 0
-			limit = 100 # default limit to prevent DDOS
-			xcond = {}
-			cond = {}
+			limit = 100 # default limit to prevent unwanted DDOS
+			kwargs = {}
 			for key, value in bottle.request.query.items():
 				if key == "limit":
 					limit = int(value)
@@ -130,27 +131,29 @@ class Server(object):
 					offset = int(value)
 				elif key == "fields":
 					fields = value.split(",")
-				elif key.startswith("x-"):
-					xcond[key[2:]] = value
 				else:
-					cond[key] = value
-			rows = resources.select(**xcond)
+					kwargs[key] = value
+			rows = resources.select(
+				limit = limit,
+				offset = offset,
+				fields = fields,
+				**kwargs)
 			assert isinstance(rows, list), "select is expected to return a list"
-			# select range of rows:
-			if offset:
-				rows = rows[offset:]
-			if limit:
-				rows = rows[:limit]
-			# select matching rows:
-			for key, value in cond.items():
-				rows = filter(
-					lambda row: key in row and type(row[key])(value) == row[key],
+			if self.filtering:
+				# select range of rows:
+				if offset:
+					rows = rows[offset:]
+				if limit:
+					rows = rows[:limit]
+				# select matching rows:
+				for key, value in kwargs.items():
+					rows = filter(
+						lambda row: key in row and type(row[key])(value) == row[key],
+						rows)
+				# filter fields:
+				rows = map(
+					lambda row: {key: value for key,value in row.items() if not fields or key in fields},
 					rows)
-			# filter fields:
-			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
-			rows = map(
-				lambda row: {key: value for key,value in row.items() if not fields or key in fields},
-				rows)
 			return self.Success(rows, status = 200)
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)

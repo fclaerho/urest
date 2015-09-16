@@ -26,7 +26,7 @@ PORT = 12345
 class Test(unittest.TestCase):
 
 	def setUp(self):
-		server = urest.Server(port = PORT)
+		server = urest.Server(port = PORT, filtering = True)
 		server.register("/hello", Hello())
 		self.process = fckit.async(server.run, threaded = False)
 

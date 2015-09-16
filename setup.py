@@ -8,7 +8,7 @@ setuptools.setup(
 	author = "florent claerhout",
 	description = "Tiny Python REST framework",
 	license = "MIT",
-	version = "2.2.0",
+	version = "2.3.0",
 	py_modules = ["urest"],
 	test_suite = "test",
 	author_email = "code@fclaerhout.fr",

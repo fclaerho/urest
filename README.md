@@ -9,7 +9,7 @@ Example
 
 	import urest
 	class Hello(urest.Resources):
-		def select(self, **kwargs):
+		def select(self, limit, offset, fields, **kwargs):
 			return [{"msg": "hello world!"}]
 		def create(self, body):
 			raise urest.MethodNotAllowed
@@ -17,11 +17,11 @@ Example
 			raise urest.MethodNotAllowed
 		def delete(self, body):
 			raise urest.MethodNotAllowed
-	server = urest.Server()
+	server = urest.Server(filtering = True)
 	server.register("/hello", Hello())
 	server.run()
 
-You can then curl http://localhost:8080/hello to get the msg.
+You can then curl http://localhost:8080/hello to get the response.
 
 
 Installation
@@ -52,10 +52,16 @@ Usage
       * `create()` returns a tuple (body, querystring, asynchronous)
         * querystring: used to build the response `Location` header
         * asynchronous: if True, use 202 as response status code, 201 otherwise
-    * Instantiate a `Server([hostname="0.0.0.0"], [port=8080])`
+    * Instantiate a `Server([json_encoder_cls], [filtering], [hostname = "0.0.0.0"], [port = 8080])`
     * `.register([path], [resources])` each URL path againts a Resources instance
-  * Start the server with `.run([quiet=False],[debug=False])`, press ^C to stop
+  * Start the server with `.run([verbose])`, press ^C to stop
   * Connect to your endpoint at http://%hostname%[:%port%]
+
+### FILTERING
+
+To ensure performance, the `.select`() implementation is expected to handle the filtering.
+However, if this is not done for any reason, **Urest** can handle it natively;
+to enable this, set the `filtering` option when instantiating the server.
 
 ### HTTP STATUS CODES
 
@@ -82,7 +88,7 @@ At the moment, two formats are supported: `application/json` and `application/xm
 
   * Selection: `GET /%resources%?[&fields=][&limit=100][&offset=]…`;
     NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
-    expect 200 on success.
+    Expect 200 on success.
     Any additional pair key=value is considered to be an exact matching;
     Any additional pair x-key=value is forwarded as argument to the Resources.select() method.
   * Creation:
