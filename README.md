@@ -95,17 +95,17 @@ REST Implementation: Client's Guide
 
   * Selection: `GET /<resources>?[offset=0][&limit=100][&fields=][&key=value]…`
     - On success:
-      * returns **200** or **206**.
+      * returns **200** or **206** on a partial content.
       * set the header `Content-Range: lbound-ubound/max`
       * set the header `Accept-Range: <resource> max`
   * Creation: `POST /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
     - On success:
-      * returns **201** or **202**.
+      * returns **201** or **202** on an asynchronous operation.
       * set the header `Location`
   * Update: `PUT /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
-    - On success, returns **200** or **204**.
+    - On success, returns **200** or **204** if there's no response body.
   * Deletion: `DELETE /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
-    - On success, returns **200** or **204**.
+    - On success, returns **200** or **204** if there's no response body.
 
 ### HTTP STATUS CODES
 
