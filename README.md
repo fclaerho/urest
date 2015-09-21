@@ -48,7 +48,7 @@ To uninstall:
     2. The parameters `limit` and `offset` allow to control pagination.
     3. `fields` allow to select a subset of result columns.
     4. Raisable exceptions:
-       * `NotImplementedError` if a method or a part of it is not implemented
+       * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
   * Method `create(body)`:
@@ -57,7 +57,7 @@ To uninstall:
     3. `querystring` is used to build the response `Location` header.
     4. `asynchronous`, a boolean. If set, returns 202, otherwise 201.
     5. Raisable exceptions:
-       * `NotImplementedError` if a method or a part of it is not implemented
+       * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
        * `ResourceExists` on resource conflict
@@ -65,7 +65,7 @@ To uninstall:
     1. `body` is the decoded request body.
     2. Returns an object that will be encoded as the response body.
     3. Raisable exceptions:
-       * `NotImplementedError` if a method or a part of it is not implemented
+       * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
        * `NoSuchResource` on missing resource
@@ -74,7 +74,7 @@ To uninstall:
     1. `body` is the decoded request body.
     2. Returns an object that will be encoded as the response body.
     3. Raisable exceptions:
-       * `NotImplementedError` if a method or a part of it is not implemented
+       * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
        * `NoSuchResource` on missing resource
