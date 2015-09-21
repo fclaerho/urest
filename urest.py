@@ -1,7 +1,7 @@
 # copyright (c) 2014-2015 fclaerhout.fr, released under the MIT license.
 # coding: utf-8
 
-import json, abc
+import xml.etree.ElementTree as ET, json, abc
 
 import bottle # 3rd-party
 
@@ -91,9 +91,18 @@ class xml:
 	def dumps(cls, obj):
 		return "<?xml version='1.0'?>\n%s" % cls._object_to_xml(obj)
 
+	class List(object):
+
+		def __init__(self, element):
+			self.element = element
+
+		def __iter__(self):
+			for child in self.element:
+				return List(child)
+
 	@classmethod
 	def loads(cls, string):
-		raise NotImplementedError("cannot load string yet")
+		return XMLList(ET.fromstring(string))
 
 class Server(object):
 

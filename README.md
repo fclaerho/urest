@@ -39,8 +39,8 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
 
 ### RESOURCES INTERFACE
 
-  * Method `select(limit, offset, fields, **kwargs)`:
-    1. Input:
+  * Method `select()`:
+    1. Parameters:
        * `limit` and `offset` allow to control paging.
        * `fields` (list of strings) allow to select result columns.
        * `kwargs` (conjunction of equalities) allow to filter rows.
@@ -49,8 +49,8 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
-  * Method `create(body)`:
-    1. Input: `body` is the decoded request body.
+  * Method `create()`:
+    1. Parameters: `body` is the decoded request body.
     2. Output: tuple `result, querystring, asynchronous`
        * `result` will be encoded as the response body
        * `querystring` is used to build the response `Location` header.
@@ -60,8 +60,8 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
        * `ResourceExists` on resource conflict
-  * Method `update(body)`:
-    1. Input: `body` is the decoded request body.
+  * Method `update()`:
+    1. Parameters: `body` is the decoded request body.
     2. Output: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
@@ -69,8 +69,8 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `ValidationError` on an invalid input
        * `NoSuchResource` on missing resource
        * `LockedError` on resource in use
-  * Method `delete(body)`:
-    1. Input: `body` is the decoded request body.
+  * Method `delete()`:
+    1. Parameters: `body` is the decoded request body.
     2. Output: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
