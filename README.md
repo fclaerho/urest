@@ -143,7 +143,7 @@ In JSON (equivalent in XML):
 
 ### SECURITY
 
-**Urest** doest no support any native authentication mechanism for the moment.
+**Urest** does not support any native authentication mechanism for the moment.
 
 RFC 7233 §6.1 — Denial-of-Service Attacks Using Range
 
