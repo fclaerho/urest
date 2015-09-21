@@ -21,6 +21,9 @@ class Hello(urest.Resources):
 	def delete(self, body):
 		raise MethodNotAllowed
 
+	def __len__(self):
+		return len(DATA)
+
 PORT = 12345
 
 class Test(unittest.TestCase):
@@ -40,7 +43,7 @@ class Test(unittest.TestCase):
 			method = "GET",
 			headers = {"Accept": "application/json"},
 			path = "/hello%s" % (querystring or ""))  
-		self.assertEqual(res.status, 200)
+		self.assertEqual(res.status, 206)
 		return json.loads(res.read())
 
 	def test_get_default_limit(self):

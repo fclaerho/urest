@@ -1,31 +1,35 @@
 
-Tiny Python REST Framework built over [Bottle](http://bottlepy.org/docs/dev/index.html) and implementing REST good practices:
-  * http://www.restapitutorial.com
-  * https://bourgeois.me/rest/
+**Urest** is a tiny Python REST Framework built over [Bottle](http://bottlepy.org/docs/dev/index.html).
+It offers a simple resource abstraction to API developers
+and takes care of implementing the REST best practices behind the scene.
 
 
-Example
--------
+Developer's Guide
+-----------------
+
+### EXAMPLE
 
 	import urest
-	class Hello(urest.Resources):
-		def select(self, limit, offset, fields, **kwargs):
-			return [{"msg": "hello world!"}]
+	class Employees(urest.Resources):
+		def select(self, *args, **kwargs):
+			return [{"firstname": "john", "lastname": "doe", "position": "hr"}]
 		def create(self, body):
 			raise urest.MethodNotAllowed
 		def update(self, body):
 			raise urest.MethodNotAllowed
 		def delete(self, body):
 			raise urest.MethodNotAllowed
+		def __len__(self):
+			return 1
 	server = urest.Server(filtering = True)
-	server.register("/hello", Hello())
+	server.register("/employees", Employees())
 	server.run()
 
-You can then curl http://localhost:8080/hello to get the response.
+You can then cURL http://localhost:8080/hello to get the response:
 
+	$ curl -H "Content-Type: application/json" http://localhost:8080/hello
 
-Installation
-------------
+### INSTALLATION
 
 	$ pip install --user urest
 
@@ -33,78 +37,27 @@ or, if the PyPI repository is not available:
 
 	$ pip install --user git+https://github.com/fclaerho/urest.git
 
-The package will be installed in your [user site-packages](https://www.python.org/dev/peps/pep-0370/#specification) directory.
-
 To uninstall:
 
 	$ pip uninstall urest
 
+### RESOURCES INTERFACE
 
-Usage
------
-
-### OVERVIEW
-
-  * In your code:
-    * `import urest`
-    * Implement the `Resources()` base class for each of your resources.
-      * `select()`, `update()` and `delete()` return the response body.
-      * `create()` returns a tuple (body, querystring, asynchronous)
-        * querystring: used to build the response `Location` header
-        * asynchronous: if True, use 202 as response status code, 201 otherwise
-    * Instantiate a `Server([json_encoder_cls], [filtering], [hostname = "0.0.0.0"], [port = 8080])`
-    * `.register([path], [resources])` each URL path againts a Resources instance
-  * Start the server with `.run([verbose])`, press ^C to stop
-  * Connect to your endpoint at http://%hostname%[:%port%]
+  * `select(self, limit, offset, fields, **kwargs)`
+    Returns an iterable object that will be encoded as the response body.
+  * `create(self, body)`
+    Returns a tuple `(body, querystring, asynchronous)`
+    * querystring: used to build the response `Location` header, e.g. `?id=1`
+    * asynchronous: if True, use 202 as response status code, 201 otherwise
+  * `update(self, body)`
+    Returns an object that will be encoded as the response body.
+  * `delete(self, body)`
+    Returns an object that will be encoded as the response body.
 
 ### FILTERING
 
-To ensure performance, the `.select`() implementation is expected to handle the filtering.
-However, if this is not done for any reason, **Urest** can handle it natively;
-to enable this, set the `filtering` option when instantiating the server.
-
-### HTTP STATUS CODES
-
-  * 200: OK — returned if no specific 2xx status code fits
-  * 201: Created — the resource has been created
-  * 202: Accepted — the resource creation is ongoing
-  * 204: No Content — the request succeeded but there's no response body
-  * 404: Not Found — no such resource
-  * 405: Method Not Allowed - http method not allowed on the resource
-  * 406: Not Acceptable — unsupported output formats (Accept header)
-  * 409: Conflict — the resource already exists
-  * 415: Unsupported Media Type — unsupported input formats (Content-Type header)
-  * 422: Unprocessable Entity — request input is invalid
-  * 423: Locked — the resource is in use and cannot be updated/deleted
-  * 501: Not Implemented
-
-### I/O FORMAT
-
-At the moment, two formats are supported: `application/json` and `application/xml`
-  * The HTTP `Content-Type` header defines the request body format
-  * The HTTP `Accept` header defines the response body formats
-
-### HTTP CRUD
-
-  * Selection: `GET /%resources%?[&fields=][&limit=100][&offset=]…`;
-    NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
-    Expect 200 on success.
-    Any additional pair key=value is considered to be an exact matching;
-    Any additional pair x-key=value is forwarded as argument to the Resources.select() method.
-  * Creation:
-    `POST /%resources%` and `body` contains the payload.
-    On successful creation, the response `Location` header is set.
-    Expect 201 (or 202 if async) on success.
-  * Update: `PUT /%resources%` and `body` contains the payload;
-    expect 200 (or 204 on empty body) on success.
-  * Deletion: `DELETE /%resources%` and `body` contains `{"name": %string%}`;
-    expect 200 (or 204 on empty body) on success.
-
-### RESPONSE STRUCTURE
-
-In JSON (equivalent in XML):
-  * On success: `{"success": true, "result": %any%}`
-  * On failure: `{"success": false, "exception": %string%}`
+For performance reasons, the `.select()` implementation is expected to handle the filtering.
+However, if this is not done, you can enable post-filtering when instantiating the server.
 
 ### EXCEPTIONS
 
@@ -133,3 +86,60 @@ For a proper handling of the HTTP status codes:
     * `LockedError` on resource in use
 
 Any other exception will be handled as 500.
+
+
+REST Implementation
+-------------------
+
+### HTTP CRUD
+
+  * Selection:
+    `GET /<resources>?[offset=][&limit=100][&fields=][&key=value]…`;
+    NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
+    Expect 200 on success.
+    Any additional pair key=value is considered to be an exact matching.
+  * Creation:
+    `POST /<resources>` and `body` contains the payload.
+    On successful creation, the response `Location` header is set.
+    Expect 201 (or 202 if async) on success.
+  * Update: `PUT /<resources>` and `body` contains the payload;
+    expect 200 (or 204 on empty body) on success.
+  * Deletion: `DELETE /<resources>` and `body` contains `{"name": <string>}`;
+    expect 200 (or 204 on empty body) on success.
+
+### HTTP STATUS CODES
+
+  * 200: OK — returned if no specific 2xx status code fits
+  * 201: Created — the resource has been created
+  * 202: Accepted — the resource creation is ongoing
+  * 204: No Content — the request succeeded but there's no response body
+	* 206: Partial Content — paging on GET
+  * 404: Not Found — no such resource
+  * 405: Method Not Allowed - http method not allowed on the resource
+  * 406: Not Acceptable — unsupported output formats (Accept header)
+  * 409: Conflict — the resource already exists
+  * 415: Unsupported Media Type — unsupported input formats (Content-Type header)
+  * 422: Unprocessable Entity — request input is invalid
+  * 423: Locked — the resource is in use and cannot be updated/deleted
+  * 501: Not Implemented
+
+### I/O FORMAT
+
+At the moment, two body formats are supported: `application/json` and `application/xml`.
+On request:
+  * the HTTP `Content-Type` header defines the request body format
+  * The HTTP `Accept` header defines the expected response body format
+
+### RESPONSE STRUCTURE
+
+In JSON (equivalent in XML):
+  * On success: `{"success": true, "result": %any%}`
+  * On failure: `{"success": false, "exception": %string%}`
+
+
+References
+----------
+
+  * http://blog.octo.com/designer-une-api-rest/ (in French)
+  * http://www.restapitutorial.com
+  * https://bourgeois.me/rest/

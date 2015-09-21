@@ -23,20 +23,19 @@ class Resources(object):
 	__metaclass__ = abc.ABCMeta
 
 	@abc.abstractmethod
-	def select(self, limit, offset, fields, **kwargs):
-		raise NotImplementedError("select not implemented")
+	def select(self, limit, offset, fields, **kwargs): pass
 
 	@abc.abstractmethod
-	def create(self, body):
-		raise NotImplementedError("create not implemented")
+	def create(self, body): pass
 
 	@abc.abstractmethod
-	def update(self, body):
-		raise NotImplementedError("update not implemented")
+	def update(self, body): pass
 
 	@abc.abstractmethod
-	def delete(self, body):
-		raise NotImplementedError("delete not implemented")
+	def delete(self, body): pass
+
+	@abc.abstractmethod
+	def __len__(self): pass
 
 class xml:
 	"poorman xml serializer"
@@ -78,29 +77,26 @@ class xml:
 
 class Server(object):
 
-	def __init__(self, json_encoder_cls = None, filtering = False, hostname = "0.0.0.0", port = 8080):
+	def __init__(self, json_encoder_cls = None, post_filtering = False, hostname = "0.0.0.0", limit = 100, port = 8080):
 		self.json_encoder_cls = json_encoder_cls
-		self.filtering = filtering
+		self.post_filtering = post_filtering
 		self.hostname = hostname
+		self.limit = limit # limit on GET to prevent unwanted DDOS
 		self.port = port
 
 	def _Response(self, obj, status, headers):
 		"configure bottle response and return data"
-		accepted = bottle.request.headers.get("Accept")
-		supported = ("application/json", "application/xml")
-		# at least one accepted content-types is supported:
-		if not accepted or any(map(lambda ct: ct in accepted, supported)):
-			bottle.response.status = status
-			bottle.response.headers.update(headers)
-			if not accepted or "application/json" in accepted:
-				bottle.response.content_type = "application/json"
-				return json.dumps(obj, cls = self.json_encoder_cls)
-			elif "application/xml" in accepted:
-				bottle.response.content_type = "application/xml"
-				return xml.dumps(obj)
-		# accepted content-types are not supported
+		accepted_ct = bottle.request.headers.get("Accept")
+		for ct, serialize in (
+			("application/json", lambda obj: json.dumps(obj, cls = self.json_encoder_cls)),
+			("application/xml", xml.dumps)):
+			if not accepted_ct or accepted_ct == ct:
+				bottle.response.status = status
+				bottle.response.headers.update(headers)
+				bottle.response.content_type = ct
+				return serialize(obj)
 		else:
-			bottle.response.status = 406
+			bottle.response.status = 406 # unsupported Accept content type
 			return None
 
 	def Success(self, result = None, status = 200, headers = None, **kwargs):
@@ -122,7 +118,7 @@ class Server(object):
 			# parse query string:
 			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
 			offset = 0
-			limit = 100 # default limit to prevent unwanted DDOS
+			limit = self.limit 
 			kwargs = {}
 			for key, value in bottle.request.query.items():
 				if key == "limit":
@@ -133,13 +129,14 @@ class Server(object):
 					fields = value.split(",")
 				else:
 					kwargs[key] = value
+			if limit > self.limit:
+				raise ValidationError("limit out of bound")
 			rows = resources.select(
 				limit = limit,
 				offset = offset,
 				fields = fields,
 				**kwargs)
-			assert isinstance(rows, list), "select is expected to return a list"
-			if self.filtering:
+			if self.post_filtering:
 				# select range of rows:
 				if offset:
 					rows = rows[offset:]
@@ -154,7 +151,13 @@ class Server(object):
 				rows = map(
 					lambda row: {key: value for key,value in row.items() if not fields or key in fields},
 					rows)
-			return self.Success(rows, status = 200)
+			count = len(resources)
+			return self.Success(
+				rows,
+				status = 200 if limit >= count else 206,
+				headers = {
+					"Content-Range": "%i-%i/%i" % (offset, offset + limit, count),
+					"Accept-Range": "%s %i" % ("not_implemented", self.limit)})
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
