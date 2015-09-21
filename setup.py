@@ -14,8 +14,10 @@ setuptools.setup(
 	author_email = "code@fclaerhout.fr",
 	install_requires = [
 		"bottle>=0.12.7",
+		"PyYAML",
 	],
 	tests_require = [
 		"bottle>=0.12.7",
+		"PyYAML",
 		"fckit",
 	])

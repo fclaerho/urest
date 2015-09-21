@@ -91,4 +91,15 @@ class Test(unittest.TestCase):
 		self.assertEqual(body["success"], True)
 		self.assertEqual(body["result"], [{"msg": _dict["msg"]} for _dict in DATA[7:][:100]])
 
+class XMLTest(unittest.TestCase):
+
+	xml = "<employee><firstname>john</firstname><lastname>doe</lastname></employee>"
+	obj = {"employee": {"firstname": "john", "lastname": "doe"}}
+
+	def test_loads(self): # xml to obj
+		self.assertEqual(urest.xml.loads(self.xml), self.obj)
+
+	def test_dumps(self): # obj to xml
+		self.assertEqual(urest.xml.loads(urest.xml.dumps(self.obj)), self.obj)
+
 if __name__ == "__main__": unittest.main(verbosity = 2)

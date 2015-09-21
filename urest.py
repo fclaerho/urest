@@ -57,6 +57,25 @@ class Resources(object):
 # implementation #
 ##################
 
+class xml(object):
+
+	@staticmethod
+	def loads(string):
+		def _node_to_dict(node):
+			if node.text:
+				return node.text
+			else:
+				return {child.tag: _node_to_dict(child) for child in node}
+		root = ET.fromstring(string)
+		return {root.tag: _node_to_dict(root)}
+
+	@classmethod
+	def dumps(cls, obj):
+		if isinstance(obj, dict):
+			return "".join("<%s>%s</%s>" % (key, cls.dumps(obj[key]), key) for key in obj)
+		else:
+			return "%s" % obj
+
 class Server(object):
 
 	def __init__(self, json_encoder_cls = None, post_filtering = False, hostname = "0.0.0.0", limit = 100, port = 8080):
@@ -77,7 +96,7 @@ class Server(object):
 		for ct, dump in (
 			("application/json", lambda obj: json.dumps(obj, cls = self.json_encoder_cls)),
 			("application/yaml", yaml.dump),
-			("application/xml", ET.dump)):
+			("application/xml", xml.dumps)):
 			if not accepted_ct or accepted_ct == ct:
 				bottle.response.status = status
 				bottle.response.headers.update(headers)
@@ -89,12 +108,13 @@ class Server(object):
 
 	def Success(self, result = None, status = 200, headers = None, **kwargs):
 		return self._Response(
-			dict({"success": True, "result": result}, **kwargs),
+			obj = dict({"success": True, "result": result}, **kwargs),
 			status = status,
 			headers = headers or {})
 
 	def Failure(self, exception, status = 400):
-		return self._Response({
+		return self._Response(
+			obj = {
 				"success": False,
 				"exception": "%s: %s" % (type(exception).__name__, exception),
 			},
