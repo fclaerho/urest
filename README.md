@@ -43,17 +43,17 @@ To uninstall:
 
 ### RESOURCES INTERFACE
 
-  * `select(self, limit, offset, fields, **kwargs)`
+  * `select(limit, offset, fields, **kwargs)`
     1. returns an iterable object that will be encoded as the response body.
     2. the parameters `limit` (which defaults to 100) and `offset` allow to control pagination.
     3. `fields` allow to select a subset of result columns. 
-  * `create(self, body)`
+  * `create(body)`
     1. returns a tuple `(body, querystring, asynchronous)`
     2. querystring: used to build the response `Location` header, e.g. `?id=1`
     3. asynchronous: if True, use 202 as response status code, 201 otherwise
-  * `update(self, body)`
+  * `update(body)`
     1. Returns an object that will be encoded as the response body.
-  * `delete(self, body)`
+  * `delete(body)`
     1. Returns an object that will be encoded as the response body.
 
 ### FILTERING
