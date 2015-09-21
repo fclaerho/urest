@@ -83,9 +83,9 @@ Any other exception will be handled as a generic server error.
 
 ### FILTERING
 
-For performance reasons, the `.select()` implementation is expected to handle the filtering.
-However, if this is not done, you can enable `post-filtering` when instantiating the server.
-The post-filtering feature handles the pagination, the field selection and expression matching.
+For performance reasons, the `.select()` implementation is expected to handle the filtering,
+that is the `offset`, `limit` and `fields` constraints.
+However, you can also enable `post-filtering` when instantiating the server and let it do this work.
 
 
 REST Implementation: Client's Guide
