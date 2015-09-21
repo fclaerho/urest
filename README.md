@@ -33,7 +33,7 @@ You can then cURL http://localhost:8080/hello to get the response:
 
 Do not install urest directly, register it as a requirement of your project instead.
 
-In `setup.py`:
+In your package's `setup.py`:
   * Add `urest` to the `install_requires` list
   * Add `urest` to the `tests_require` list 
 
