@@ -130,6 +130,7 @@ REST Implementation: Client's Guide
 ### I/O FORMAT
 
 At the moment, two body formats are supported: `application/json` and `application/xml`.
+
 On request:
   * the HTTP `Content-Type` header defines the request body format
   * The HTTP `Accept` header defines the expected response body format
@@ -137,7 +138,7 @@ On request:
 ### RESPONSE STRUCTURE
 
 In JSON (equivalent in XML):
-  * On success: `{"success": true, "result": <any>}`
+  * On success: `{"success": true, "result": <object>}`
   * On failure: `{"success": false, "exception": <string>}`
 
 
