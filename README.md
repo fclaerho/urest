@@ -33,7 +33,7 @@ Server Side: API Developer's Guide
 
 You can then cURL http://localhost:8080/employees to poke the API:
 
-	$ curl -H "Content-Type: application/json" http://localhost:8080/employees
+	$ curl -H "Content-Type: application/json" http://localhost:8080/employees?limit=4
 
 ### INSTALLATION
 
