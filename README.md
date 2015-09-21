@@ -25,7 +25,7 @@ Server Side: API Developer's Guide
 	server.register("/messages", Messages())
 	server.run()
 
-You can then cURL http://localhost:8080/messages to poke the API:
+You can then cURL the endpoint:
 
 	$ curl -H "Content-Type: application/json" http://localhost:8080/messages?limit=4
 
