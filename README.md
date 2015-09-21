@@ -156,7 +156,7 @@ RFC 7233 §6.1 — Denial-of-Service Attacks Using Range
 > particularly when the ranges are requested out of order for no apparent
 > reason. Multipart range requests are not designed to support random access.
 
-According to this **Urest** doesn't prevent a request to fetch all resources.
+According to this **Urest** doesn't prevent an explicit request to fetch all resources.
 
 
 References
