@@ -31,7 +31,7 @@ You can then cURL http://localhost:8080/hello to get the response:
 
 ### INSTALLATION
 
-Do not install urest directly, register it as a requirement of your project instead.
+Do not install urest directly, register it as a requirement of your package instead.
 
 In your package's `setup.py`:
   * Add `urest` to the `install_requires` list
