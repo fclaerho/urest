@@ -44,27 +44,28 @@ To uninstall:
 ### RESOURCES INTERFACE
 
   * Method `select(limit[=100], offset[=0], fields, **kwargs)`:
-    1. Returns an iterable object that will be encoded as the response body.
-    2. The parameters `limit` and `offset` allow to control pagination.
-    3. `fields` allow to select a subset of resulting fields.
-    4. `kwargs` allow to select a subset of resulting rows.
-    5. Raisable exceptions:
+    1. Input:
+       * The parameters `limit` and `offset` allow to control pagination.
+       * `fields` allow to select a subset of resulting fields.
+       * `kwargs` allow to select a subset of resulting rows.
+    2. Output: **iterable** object that will be encoded as the response body.
+    3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
   * Method `create(body)`:
-    1. `body` is the decoded request body.
-    2. Returns a tuple `(body, querystring, asynchronous)`
-    3. `querystring` is used to build the response `Location` header.
-    4. `asynchronous`, a boolean. If set, returns **202**, otherwise **201**.
-    5. Raisable exceptions:
+    1. Input: `body` is the decoded request body.
+    2. Output: tuple `(body, querystring, asynchronous)`
+       * `querystring` is used to build the response `Location` header.
+       * `asynchronous`, a boolean. If set, returns **202**, otherwise **201**.
+    3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
        * `ResourceExists` on resource conflict
   * Method `update(body)`:
-    1. `body` is the decoded request body.
-    2. Returns an object that will be encoded as the response body.
+    1. Input: `body` is the decoded request body.
+    2. Output: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
@@ -72,8 +73,8 @@ To uninstall:
        * `NoSuchResource` on missing resource
        * `LockedError` on resource in use
   * Method `delete(body)`:
-    1. `body` is the decoded request body.
-    2. Returns an object that will be encoded as the response body.
+    1. Input: `body` is the decoded request body.
+    2. Output: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
@@ -95,17 +96,19 @@ REST Implementation
 
 ### HTTP CRUD
 
-  * Selection: `GET /<resources>?[offset=][&limit=100][&fields=][&key=value]…`
-    1. NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
-    2. On success, returns **200** or **204**.
-    3. Any additional pair key=value is considered to be an exact matching.
+  * Selection: `GET /<resources>?[offset=0][&limit=100][&fields=][&key=value]…`
+    - On success:
+      * returns **200**, **204** or **206**.
+      * set the header `Content-Range`
+      * set the header `Accept-Range`
   * Creation: `POST /<resources>` and `body` contains the payload.
-    1. On success, the response `Location` header is set.
-    2. On success, returns **201** or **202**.
+    - On success:
+      * returns **201** or **202**.
+      * set the header `Location`
   * Update: `PUT /<resources>` and `body` contains the payload;
-    1. On success, returns **200** or **204**.
+    - On success, returns **200** or **204**.
   * Deletion: `DELETE /<resources>` and `body` contains `{"name": <string>}`;
-    1. On success, returns **200** or **204**.
+    - On success, returns **200** or **204**.
 
 ### HTTP STATUS CODES
 
