@@ -42,8 +42,8 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
   * Method `select(limit, offset, fields, **kwargs)`:
     1. Input:
        * `limit` and `offset` allow to control paging.
-       * `fields` allow to select a subset of resulting fields.
-       * `kwargs` allow to select a subset of resulting rows.
+       * `fields` (list of strings) allow to select result columns.
+       * `kwargs` (conjunction of equalities) allow to filter rows.
     2. Output: **iterable** object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
@@ -93,7 +93,8 @@ REST Implementation: Client's Guide
 
 ### HTTP CRUD
 
-  * Selection: `GET /<resources>?[offset=…][&limit=…][&fields=…][&key=value]… HEADERS {["Accept":…], …}`
+  * Selection: `GET /<resources>?[range=…][offset=…][&limit=…][&fields=…][&key=value]… HEADERS {["Accept":…], …}`
+    - You may use `range` (x-y, -y, x-) OR `offset`+`limit` for paging
     - On success:
       * returns **200** or **206** on a partial content.
       * set the header `Content-Range: resource <offset>-<offset+limit>/<count>`
@@ -156,7 +157,7 @@ RFC 7233 §6.1 — Denial-of-Service Attacks Using Range
 > particularly when the ranges are requested out of order for no apparent
 > reason. Multipart range requests are not designed to support random access.
 
-According to this **Urest** doesn't prevent an explicit request to fetch all resources.
+According to this **Urest** doesn't forbid to fetch all resources (e.g. `?range=0-`)
 
 
 References

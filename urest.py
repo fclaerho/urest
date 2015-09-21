@@ -107,10 +107,10 @@ class Server(object):
 	def _Response(self, obj, status, headers):
 		"configure bottle response and return data"
 		# RFC 2616 §14.1: If no Accept header field is present, then is is assumed
-		# that the client accepts all media types. […]
-		# If an Accept header field is present, and if the server cannot send a
-		# response which is acceptable according to the combined Accept field value,
-		# then the server SHOULD send a 406 (not acceptable) response.
+		# that the client accepts all media types. […] If an Accept header field is
+		# present, and if the server cannot send a response which is acceptable
+		# according to the combined Accept field value, then the server SHOULD send
+		# a 406 (not acceptable) response.
 		accepted_ct = bottle.request.headers.get("Accept")
 		for ct, serialize in (
 			("application/json", lambda obj: json.dumps(obj, cls = self.json_encoder_cls)),
@@ -146,7 +146,10 @@ class Server(object):
 			limit = self.limit 
 			kwargs = {}
 			for key, value in bottle.request.query.items():
-				if key == "limit":
+				if key == "range": # shortcut
+					offset, ubound = value.split("-")
+					limit = ubound - offset
+				elif key == "limit":
 					limit = int(value)
 				elif key == "offset":
 					offset = int(value)
@@ -175,7 +178,7 @@ class Server(object):
 					lambda row: {key: value for key,value in row.items() if not fields or key in fields},
 					rows)
 			count = len(resources)
-			if limit < count:
+			if limit <= count:
 				return self.Success(rows)
 			else:
 				return self.Success(
@@ -185,14 +188,14 @@ class Server(object):
 						"Content-Range": "resource %i-%i/%i" % (offset, offset + limit, count),
 						"Accept-Range": "resource",
 					})
-		except NotImplementedError as exc:
-			return self.Failure(exc, status = 501)
-		except MethodNotAllowed as exc:
-			return self.Failure(exc, status = 405)
 		except ValidationError as exc:
 			return self.Failure(exc, status = 400)
+		except MethodNotAllowed as exc:
+			return self.Failure(exc, status = 405)
 		except RangeNotSatisfiable as exc:
 			return self.Failure(exc, status = 416)
+		except NotImplementedError as exc:
+			return self.Failure(exc, status = 501)
 		except Exception as exc:
 			return self.Failure(exc, status = 500)
 
@@ -219,14 +222,14 @@ class Server(object):
 				result = result,
 				status = 202 if asynchronous else 201,
 				headers = {"Location": "%s?%s" % (bottle.request.url, querystring)})
-		except NotImplementedError as exc:
-			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
 			return self.Failure(exc, status = 405)
-		except ValidationError as exc:
-			return self.Failure(exc, status = 422)
 		except ResourceExists as exc:
 			return self.Failure(exc, status = 409)
+		except ValidationError as exc:
+			return self.Failure(exc, status = 422)
+		except NotImplementedError as exc:
+			return self.Failure(exc, status = 501)
 		except Exception as exc:
 			return self.Failure(exc, status = 500)
 
@@ -241,16 +244,16 @@ class Server(object):
 			return self.Success(
 				result = resources.update(body),
 				status = 200 if result else 204)
-		except NotImplementedError as exc:
-			return self.Failure(exc, status = 501)
+		except NoSuchResource as exc:
+			return self.Failure(exc, status = 404)
 		except MethodNotAllowed as exc:
 			return self.Failure(exc, status = 405)
 		except ValidationError as exc:
 			return self.Failure(exc, status = 422)
-		except NoSuchResource as exc:
-			return self.Failure(exc, status = 404)
 		except LockedResourceError as exc:
 			return self.Failure(exc, status = 423)
+		except NotImplementedError as exc:
+			return self.Failure(exc, status = 501)
 		except Exception as exc:
 			return self.Failure(exc, status = 500)
 
@@ -265,16 +268,16 @@ class Server(object):
 			return self.Success(
 				result = model.delete(body),
 				status = 200 if result else 204)
-		except NotImplementedError as exc:
-			return self.Failure(exc, status = 501)
+		except NoSuchResource as exc:
+			return self.Failure(exc, status = 404)
 		except MethodNotAllowed as exc:
 			return self.Failure(exc, status = 405)
 		except ValidationError as exc:
 			return self.Failure(exc, status = 422)
-		except NoSuchResource as exc:
-			return self.Failure(exc, status = 404)
 		except LockedResourceError as exc:
 			return self.Failure(exc, status = 423)
+		except NotImplementedError as exc:
+			return self.Failure(exc, status = 501)
 		except Exception as exc:
 			return self.Failure(exc, status = 500)
 
