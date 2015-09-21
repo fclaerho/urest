@@ -56,7 +56,7 @@ To uninstall:
     1. `body` is the decoded request body.
     2. Returns a tuple `(body, querystring, asynchronous)`
     3. `querystring` is used to build the response `Location` header.
-    4. `asynchronous`, a boolean. If set, returns *202*, otherwise *201*.
+    4. `asynchronous`, a boolean. If set, returns **202**, otherwise **201**.
     5. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
@@ -97,35 +97,35 @@ REST Implementation
 
   * Selection: `GET /<resources>?[offset=][&limit=100][&fields=][&key=value]…`
     1. NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
-    2. On success, returns *200* or *204*.
+    2. On success, returns **200** or **204**.
     3. Any additional pair key=value is considered to be an exact matching.
   * Creation: `POST /<resources>` and `body` contains the payload.
     1. On success, the response `Location` header is set.
-    2. On success, returns *201* or *202*.
+    2. On success, returns **201** or **202**.
   * Update: `PUT /<resources>` and `body` contains the payload;
-    1. On success, returns *200* or *204*.
+    1. On success, returns **200** or **204**.
   * Deletion: `DELETE /<resources>` and `body` contains `{"name": <string>}`;
-    1. On success, returns *200* or *204*.
+    1. On success, returns **200** or **204**.
 
 ### HTTP STATUS CODES
 
   * On success:
-    * *201*: Created — a resource has been created
-    * *202*: Accepted — a resource creation is ongoing
-    * *204*: No Content — the request succeeded but there's no response body
-    * *206*: Partial Content — a part of the content has been returned, i.e. paging on GET
-    * otherwise *200*: OK — returned if no specific 2xx status code fits
+    * **201**: Created — a resource has been created
+    * **202**: Accepted — a resource creation is ongoing
+    * **204**: No Content — the request succeeded but there's no response body
+    * **206**: Partial Content — a part of the content has been returned, i.e. paging on GET
+    * otherwise **200**: OK — returned if no specific 2xx status code fits
   * On request error:
-    * *404*: Not Found — no such resource
-    * *405*: Method Not Allowed - http method not allowed on the resource
-    * *406*: Not Acceptable — unsupported output formats (Accept header)
-    * *409*: Conflict — the resource already exists
-    * *415*: Unsupported Media Type — unsupported input formats (Content-Type header)
-    * *422*: Unprocessable Entity — request input is invalid
-    * *423*: Locked — the resource is in use and cannot be updated/deleted
+    * **404**: Not Found — no such resource
+    * **405**: Method Not Allowed - http method not allowed on the resource
+    * **406**: Not Acceptable — unsupported output formats (Accept header)
+    * **409**: Conflict — the resource already exists
+    * **415**: Unsupported Media Type — unsupported input formats (Content-Type header)
+    * **422**: Unprocessable Entity — request input is invalid
+    * **423**: Locked — the resource is in use and cannot be updated/deleted
   * On internal error:
-    * *501*: Not Implemented
-    * otherwise *500*: Unexpected error
+    * **501**: Not Implemented
+    * otherwise **500**: Unexpected error
 
 ### I/O FORMAT
 
