@@ -10,30 +10,24 @@ Server Side: API Developer's Guide
 ### EXAMPLE
 
 	import urest
-	class Employees(urest.Resources):
-		def __init__(self):
-			self.memdb = []
+	class Messages(urest.Resources):
 		def select(self, *args, **kwargs):
-			return self.memdb
-		def create(self, body):
-			try:
-				self.memdb.append({"name": body["name"], "position": body["position"]})
-			except KeyError as exc:
-				raise urest.ValidationError(exc)
-			return None, "name=%s" % body["name"], False
-		def update(self, body):
+			return [{"msg": "hello world!"}]
+		def create(self, obj):
 			raise urest.MethodNotAllowed
-		def delete(self, body):
+		def update(self, obj):
+			raise urest.MethodNotAllowed
+		def delete(self, obj):
 			raise urest.MethodNotAllowed
 		def __len__(self):
 			return len(self.memdb)
 	server = urest.Server(post_filtering = True)
-	server.register("/employees", Employees())
+	server.register("/messages", Employees())
 	server.run()
 
-You can then cURL http://localhost:8080/employees to poke the API:
+You can then cURL http://localhost:8080/messages to poke the API:
 
-	$ curl -H "Content-Type: application/json" http://localhost:8080/employees?limit=4
+	$ curl -H "Content-Type: application/json" http://localhost:8080/messages?limit=4
 
 ### INSTALLATION
 
@@ -53,7 +47,7 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
   * **Method `create()`**:
-    1. Parameters: `body` is the decoded request body.
+    1. Parameters: `obj` is the decoded request body.
     2. Return: tuple `result, querystring, asynchronous`
        * `result` will be encoded as the response body
        * `querystring` is used to build the response `Location` header.
@@ -64,7 +58,7 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `ValidationError` on an invalid input
        * `ResourceExists` on resource conflict
   * **Method `update()`**:
-    1. Parameters: `body` is the decoded request body.
+    1. Parameters: `obj` is the decoded request body.
     2. Return: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
@@ -73,7 +67,7 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `NoSuchResource` on missing resource
        * `LockedError` on resource in use
   * **Method `delete()`**:
-    1. Parameters: `body` is the decoded request body.
+    1. Parameters: `obj` is the decoded request body.
     2. Return: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
@@ -147,7 +141,9 @@ In JSON (equivalent in XML):
   * On success: `{"success": true, "result": <object>}`
   * On failure: `{"success": false, "exception": <string>}`
 
-### SECURITY 
+### SECURITY
+
+**Urest** doest no support any native authentication mechanism for the moment.
 
 RFC 7233 §6.1 — Denial-of-Service Attacks Using Range
 

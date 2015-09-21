@@ -42,13 +42,13 @@ class Resources(object):
 	def select(self, limit, offset, fields, **kwargs): pass
 
 	@abc.abstractmethod
-	def create(self, body): pass
+	def create(self, obj): pass
 
 	@abc.abstractmethod
-	def update(self, body): pass
+	def update(self, obj): pass
 
 	@abc.abstractmethod
-	def delete(self, body): pass
+	def delete(self, obj): pass
 
 	@abc.abstractmethod
 	def __len__(self): pass
@@ -63,6 +63,7 @@ class Server(object):
 		self.json_encoder_cls = json_encoder_cls
 		self.post_filtering = post_filtering
 		self.hostname = hostname
+		self.limit = limit
 		self.port = port
 
 	def _Response(self, obj, status, headers):
@@ -77,7 +78,7 @@ class Server(object):
 			("application/json", lambda obj: json.dumps(obj, cls = self.json_encoder_cls)),
 			("application/yaml", yaml.dump),
 			("application/xml", ET.dump)):
-			if accepted_ct in (None, ct): 
+			if not accepted_ct or accepted_ct == ct:
 				bottle.response.status = status
 				bottle.response.headers.update(headers)
 				bottle.response.content_type = ct
@@ -140,7 +141,7 @@ class Server(object):
 						rows)
 				# filter fields:
 				rows = map(
-					lambda row: {key: value for key,value in row.items() if not fields or key in fields},
+					lambda row: {k: v for k, v in row.items() if not fields or k in fields},
 					rows)
 			count = len(resources)
 			if limit <= count:
@@ -168,25 +169,25 @@ class Server(object):
 
 	def parse_body(self):
 		"return parsed object on success, raise FormatError or SyntaxError on failure"
-		content_type = bottle.request.headers.get("Content-Type")
+		request_ct = bottle.request.headers.get("Content-Type")
 		for ct, load in (
 			("application/json", json.loads),
 			("application/yaml", yaml.load),
 			("application/xml", xml.loads)):
-			if content_type == ct:
+			if request_ct == ct:
 				return load(bottle.request.body.read())
 		else:
-			raise FormatError(content_type, "unsupported input content-type")
+			raise FormatError(request_ct, "unsupported input content-type")
 
 	def create(self, resources):
 		try:
-			body = self.parse_body()
+			obj = self.parse_body()
 		except FormatError as exc:
 			return self.Failure(exc, status = 415)
 		except Exception as exc:
 			return self.Failure(exc, status = 400)
 		try:
-			result, querystring, asynchronous = resources.create(body)
+			result, querystring, asynchronous = resources.create(obj)
 			return self.Success(
 				result = result,
 				status = 202 if asynchronous else 201,
@@ -204,14 +205,14 @@ class Server(object):
 
 	def update(self, resources):
 		try:
-			body = self.parse_body()
+			obj = self.parse_body()
 		except FormatError as exc:
 			return self.Failure(exc, status = 415)
 		except Exception as exc:
 			return self.Failure(exc, status = 400)
 		try:
 			return self.Success(
-				result = resources.update(body),
+				result = resources.update(obj),
 				status = 200 if result else 204)
 		except NoSuchResource as exc:
 			return self.Failure(exc, status = 404)
@@ -228,14 +229,14 @@ class Server(object):
 
 	def delete(self, model):
 		try:
-			body = self.parse_body()
+			obj = self.parse_body()
 		except FormatError as exc:
 			return self.Failure(exc, status = 415)
 		except Exception as exc:
 			return self.Failure(exc, status = 400)
 		try:
 			return self.Success(
-				result = model.delete(body),
+				result = model.delete(obj),
 				status = 200 if result else 204)
 		except NoSuchResource as exc:
 			return self.Failure(exc, status = 404)

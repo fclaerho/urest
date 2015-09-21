@@ -12,20 +12,21 @@ class Messages(urest.Resources):
 	def select(self, **kwargs):
 		return DATA
 
-	def create(self, body):
+	def create(self, obj):
 		raise MethodNotAllowed
 
-	def update(self, body):
+	def update(self, obj):
 		raise MethodNotAllowed
 
-	def delete(self, body):
+	def delete(self, obj):
 		raise MethodNotAllowed
 
 	def __len__(self):
 		return len(DATA)
 
+PROXYPORT = None
 PATH = "/messages"
-PORT = 12345
+PORT = 12347
 
 class Test(unittest.TestCase):
 
@@ -40,10 +41,10 @@ class Test(unittest.TestCase):
 	def _get(self, querystring = None):
 		res = fckit.http_request(
 			hostname = "localhost",
-			port = PORT,
+			port = PROXYPORT or PORT,
 			method = "GET",
 			headers = {"Accept": "application/json"},
-			path = "%s%s" % (PATH, querystring or ""))  
+			path = "%s%s%s" % (("http://localhost:%i" % PORT) if PROXYPORT else "", PATH, querystring or ""))  
 		self.assertIn(res.status, (200, 206))
 		if res.status == 206:
 			content_range = res.getheader("Content-Range")
