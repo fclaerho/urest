@@ -135,7 +135,7 @@ Client Side: REST Implementation
 
 ### I/O FORMAT
 
-At the moment, two body formats are supported: `application/json` and `application/xml`.
+3 body formats are supported: `application/json`, `application/yaml` and `application/xml`.
 
 On request:
   * the HTTP `Content-Type` header defines the request body format
