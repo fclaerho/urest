@@ -4,8 +4,8 @@ It offers a simple resource abstraction to API developers
 and takes care of implementing the REST best practices behind the scene.
 
 
-API Developer's Guide
----------------------
+Server Side: API Developer's Guide
+----------------------------------
 
 ### EXAMPLE
 
@@ -88,8 +88,8 @@ that is the `offset`, `limit`, `fields` and `kwargs` constraints.
 You can also let the server do this work by setting the `post-filtering` flag.
 
 
-REST Implementation: Client's Guide
------------------------------------
+Client Side: REST Implementation
+--------------------------------
 
 ### HTTP CRUD
 
