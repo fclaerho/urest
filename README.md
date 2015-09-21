@@ -21,7 +21,7 @@ Developer's Guide
 			raise urest.MethodNotAllowed
 		def __len__(self):
 			return 1
-	server = urest.Server(filtering = True)
+	server = urest.Server(post_filtering = True)
 	server.register("/employees", Employees())
 	server.run()
 
