@@ -4,8 +4,8 @@ It offers a simple resource abstraction to API developers
 and takes care of implementing the REST best practices behind the scene.
 
 
-Developer's Guide
------------------
+API Developer's Guide
+---------------------
 
 ### EXAMPLE
 
@@ -92,8 +92,8 @@ However, if this is not done, you can enable `post-filtering` when instantiating
 The post-filtering feature handles the pagination, the field selection and expression matching.
 
 
-REST Implementation
--------------------
+REST Implementation: Client's Guide
+-----------------------------------
 
 ### HTTP CRUD
 
