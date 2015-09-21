@@ -11,16 +11,19 @@ API Developer's Guide
 
 	import urest
 	class Employees(urest.Resources):
+		def __init__(self):
+			self.db = []
 		def select(self, *args, **kwargs):
-			return [{"firstname": "john", "lastname": "doe", "position": "hr"}]
+			return self.db
 		def create(self, body):
-			raise urest.MethodNotAllowed
+			self.db.append({"name": body["name"], "position": body["position"]})
+			return None, "name=%s" % body["name"], False
 		def update(self, body):
 			raise urest.MethodNotAllowed
 		def delete(self, body):
 			raise urest.MethodNotAllowed
 		def __len__(self):
-			return 1
+			return len(self.db)
 	server = urest.Server(post_filtering = True)
 	server.register("/employees", Employees())
 	server.run()
@@ -31,17 +34,14 @@ You can then cURL http://localhost:8080/employees to poke the API:
 
 ### INSTALLATION
 
-Do not install **Urest** directly, register it as a requirement of your package instead.
-
-In `setup.py`:
-  * Add `"urest"` to the `install_requires` list
-  * Add `"urest"` to the `tests_require` list 
+Do not install **Urest** directly, register it as a requirement of your package instead:
+in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
 
 ### RESOURCES INTERFACE
 
-  * Method `select(limit[=100], offset[=0], fields, **kwargs)`:
+  * Method `select(limit, offset, fields, **kwargs)`:
     1. Input:
-       * The parameters `limit` and `offset` allow to control pagination.
+       * `limit` and `offset` allow to control paging.
        * `fields` allow to select a subset of resulting fields.
        * `kwargs` allow to select a subset of resulting rows.
     2. Output: **iterable** object that will be encoded as the response body.
@@ -83,7 +83,7 @@ Any other exception will be handled as a generic server error.
 
 ### FILTERING
 
-For performance reasons, the `.select()` implementation is expected to handle the filtering,
+For performance reasons, the `select()` implementation is expected to handle the filtering,
 that is the `offset`, `limit`, `fields` and `kwargs` constraints.
 You can also let the server do this work by setting the `post-filtering` flag.
 
@@ -93,7 +93,7 @@ REST Implementation: Client's Guide
 
 ### HTTP CRUD
 
-  * Selection: `GET /<resources>?[offset=0][&limit=100][&fields=][&key=value]…`
+  * Selection: `GET /<resources>?[offset=…][&limit=…][&fields=…][&key=value]…`
     - On success:
       * returns **200** or **206** on a partial content.
       * set the header `Content-Range: resource <offset>-<offset+limit>/<count>`
