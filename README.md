@@ -22,7 +22,7 @@ Server Side: API Developer's Guide
 		def __len__(self):
 			return len(self.memdb)
 	server = urest.Server(post_filtering = True)
-	server.register("/messages", Employees())
+	server.register("/messages", Messages())
 	server.run()
 
 You can then cURL http://localhost:8080/messages to poke the API:

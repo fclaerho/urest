@@ -24,9 +24,9 @@ class Messages(urest.Resources):
 	def __len__(self):
 		return len(DATA)
 
-PROXYPORT = None
+PROXYPORT = None # set this to debug with a local proxy
 PATH = "/messages"
-PORT = 12347
+PORT = 9999
 
 class Test(unittest.TestCase):
 
