@@ -44,14 +44,14 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `limit` and `offset` allow to control paging.
        * `fields` (list of strings) allow to select result columns.
        * `kwargs` (conjunction of equalities) allow to filter rows.
-    2. Output: **iterable** object that will be encoded as the response body.
+    2. Return: **iterable** object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
   * **Method `create()`**:
     1. Parameters: `body` is the decoded request body.
-    2. Output: tuple `result, querystring, asynchronous`
+    2. Return: tuple `result, querystring, asynchronous`
        * `result` will be encoded as the response body
        * `querystring` is used to build the response `Location` header.
        * `asynchronous`, a boolean. If set, returns **202**, otherwise **201**.
@@ -62,7 +62,7 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `ResourceExists` on resource conflict
   * **Method `update()`**:
     1. Parameters: `body` is the decoded request body.
-    2. Output: object that will be encoded as the response body.
+    2. Return: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
@@ -71,7 +71,7 @@ in `setup.py`, add `urest` to the `install_requires` and `tests_require` lists.
        * `LockedError` on resource in use
   * **Method `delete()`**:
     1. Parameters: `body` is the decoded request body.
-    2. Output: object that will be encoded as the response body.
+    2. Return: object that will be encoded as the response body.
     3. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
