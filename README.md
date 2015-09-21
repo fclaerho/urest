@@ -12,18 +12,18 @@ Server Side: API Developer's Guide
 	import urest
 	class Employees(urest.Resources):
 		def __init__(self):
-			self.db = []
+			self.memdb = []
 		def select(self, *args, **kwargs):
-			return self.db
+			return self.memdb
 		def create(self, body):
-			self.db.append({"name": body["name"], "position": body["position"]})
+			self.memdb.append({"name": body["name"], "position": body["position"]})
 			return None, "name=%s" % body["name"], False
 		def update(self, body):
 			raise urest.MethodNotAllowed
 		def delete(self, body):
 			raise urest.MethodNotAllowed
 		def __len__(self):
-			return len(self.db)
+			return len(self.memdb)
 	server = urest.Server(post_filtering = True)
 	server.register("/employees", Employees())
 	server.run()

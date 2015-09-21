@@ -91,18 +91,9 @@ class xml:
 	def dumps(cls, obj):
 		return "<?xml version='1.0'?>\n%s" % cls._object_to_xml(obj)
 
-	class List(object):
-
-		def __init__(self, element):
-			self.element = element
-
-		def __iter__(self):
-			for child in self.element:
-				return List(child)
-
 	@classmethod
 	def loads(cls, string):
-		return XMLList(ET.fromstring(string))
+		return XMLList(ET.fromstring(string)) # FIXME
 
 class Server(object):
 
