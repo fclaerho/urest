@@ -46,8 +46,9 @@ To uninstall:
   * Method `select(limit[=100], offset[=0], fields, **kwargs)`:
     1. Returns an iterable object that will be encoded as the response body.
     2. The parameters `limit` and `offset` allow to control pagination.
-    3. `fields` allow to select a subset of result columns.
-    4. Raisable exceptions:
+    3. `fields` allow to select a subset of resulting fields.
+    4. `kwargs` allow to select a subset of resulting rows.
+    5. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
        * `ValidationError` on an invalid input
@@ -55,7 +56,7 @@ To uninstall:
     1. `body` is the decoded request body.
     2. Returns a tuple `(body, querystring, asynchronous)`
     3. `querystring` is used to build the response `Location` header.
-    4. `asynchronous`, a boolean. If set, returns 202, otherwise 201.
+    4. `asynchronous`, a boolean. If set, returns *202*, otherwise *201*.
     5. Raisable exceptions:
        * `NotImplementedError` if the method or a part of it is not implemented
        * `MethodNotAllowed` if the method is not allowed
@@ -80,12 +81,13 @@ To uninstall:
        * `NoSuchResource` on missing resource
        * `LockedError` on resource in use
 
-Any other raised exception will be handled as 500.
+Any other raised exception will be handled as a generic server error.
 
 ### FILTERING
 
 For performance reasons, the `.select()` implementation is expected to handle the filtering.
 However, if this is not done, you can enable `post-filtering` when instantiating the server.
+The post-filtering feature handles the pagination, the field selection and expression matching.
 
 
 REST Implementation
@@ -95,31 +97,35 @@ REST Implementation
 
   * Selection: `GET /<resources>?[offset=][&limit=100][&fields=][&key=value]…`
     1. NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
-    2. Expect 200 on success.
+    2. On success, returns *200* or *204*.
     3. Any additional pair key=value is considered to be an exact matching.
   * Creation: `POST /<resources>` and `body` contains the payload.
-    On successful creation, the response `Location` header is set.
-    Expect 201 (or 202 if async) on success.
+    1. On success, the response `Location` header is set.
+    2. On success, returns *201* or *202*.
   * Update: `PUT /<resources>` and `body` contains the payload;
-    expect 200 (or 204 on empty body) on success.
+    1. On success, returns *200* or *204*.
   * Deletion: `DELETE /<resources>` and `body` contains `{"name": <string>}`;
-    expect 200 (or 204 on empty body) on success.
+    1. On success, returns *200* or *204*.
 
 ### HTTP STATUS CODES
 
-  * 200: OK — returned if no specific 2xx status code fits
-  * 201: Created — the resource has been created
-  * 202: Accepted — the resource creation is ongoing
-  * 204: No Content — the request succeeded but there's no response body
-	* 206: Partial Content — paging on GET
-  * 404: Not Found — no such resource
-  * 405: Method Not Allowed - http method not allowed on the resource
-  * 406: Not Acceptable — unsupported output formats (Accept header)
-  * 409: Conflict — the resource already exists
-  * 415: Unsupported Media Type — unsupported input formats (Content-Type header)
-  * 422: Unprocessable Entity — request input is invalid
-  * 423: Locked — the resource is in use and cannot be updated/deleted
-  * 501: Not Implemented
+  * On success:
+    * *201*: Created — a resource has been created
+    * *202*: Accepted — a resource creation is ongoing
+    * *204*: No Content — the request succeeded but there's no response body
+    * *206*: Partial Content — a part of the content has been returned, i.e. paging on GET
+    * otherwise *200*: OK — returned if no specific 2xx status code fits
+  * On request error:
+    * *404*: Not Found — no such resource
+    * *405*: Method Not Allowed - http method not allowed on the resource
+    * *406*: Not Acceptable — unsupported output formats (Accept header)
+    * *409*: Conflict — the resource already exists
+    * *415*: Unsupported Media Type — unsupported input formats (Content-Type header)
+    * *422*: Unprocessable Entity — request input is invalid
+    * *423*: Locked — the resource is in use and cannot be updated/deleted
+  * On internal error:
+    * *501*: Not Implemented
+    * otherwise *500*: Unexpected error
 
 ### I/O FORMAT
 
@@ -131,8 +137,8 @@ On request:
 ### RESPONSE STRUCTURE
 
 In JSON (equivalent in XML):
-  * On success: `{"success": true, "result": %any%}`
-  * On failure: `{"success": false, "exception": %string%}`
+  * On success: `{"success": true, "result": <any>}`
+  * On failure: `{"success": false, "exception": <string>}`
 
 
 References
