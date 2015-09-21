@@ -125,7 +125,7 @@ REST Implementation: Client's Guide
     * **423**: Locked — the resource is in use and cannot be updated/deleted
   * On internal error:
     * **501**: Not Implemented
-    * otherwise **500**: Unexpected error
+    * otherwise **500**: Internal Server Error
 
 ### I/O FORMAT
 
