@@ -174,7 +174,8 @@ class Server(object):
 				status = 200 if limit >= count else 206,
 				headers = {
 					"Content-Range": "%i-%i/%i" % (offset, offset + limit, count),
-					"Accept-Range": "%s %i" % ("not_implemented", self.limit)})
+					"Accept-Range": "%s %i" % ("not_implemented", self.limit),
+				})
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:

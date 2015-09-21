@@ -106,9 +106,9 @@ REST Implementation
     - On success:
       * returns **201** or **202**.
       * set the header `Location`
-  * Update: `PUT /<resources>` and `body` contains the payload;
+  * Update: `PUT /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
     - On success, returns **200** or **204**.
-  * Deletion: `DELETE /<resources>` and `body` contains `{"name": <string>}`;
+  * Deletion: `DELETE /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
     - On success, returns **200** or **204**.
 
 ### HTTP STATUS CODES
