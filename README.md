@@ -25,9 +25,9 @@ API Developer's Guide
 	server.register("/employees", Employees())
 	server.run()
 
-You can then cURL http://localhost:8080/hello to get the response:
+You can then cURL http://localhost:8080/employees to get the response:
 
-	$ curl -H "Content-Type: application/json" http://localhost:8080/hello
+	$ curl -H "Content-Type: application/json" http://localhost:8080/employees
 
 ### INSTALLATION
 
