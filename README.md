@@ -31,15 +31,11 @@ You can then cURL http://localhost:8080/hello to get the response:
 
 ### INSTALLATION
 
-	$ pip install --user urest
+Do not install urest directly; register it as a requirement to your project.
 
-or, if the PyPI repository is not available:
-
-	$ pip install --user git+https://github.com/fclaerho/urest.git
-
-To uninstall:
-
-	$ pip uninstall urest
+In `setup.py`:
+  * Add `urest` to the `install_requires` list
+  * Add `urest` to the `tests_require` list 
 
 ### RESOURCES INTERFACE
 
