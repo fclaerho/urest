@@ -55,7 +55,8 @@ To uninstall:
        * `ValidationError` on an invalid input
   * Method `create(body)`:
     1. Input: `body` is the decoded request body.
-    2. Output: tuple `(body, querystring, asynchronous)`
+    2. Output: tuple `result, querystring, asynchronous`
+       * `result` will be encoded as the response body
        * `querystring` is used to build the response `Location` header.
        * `asynchronous`, a boolean. If set, returns **202**, otherwise **201**.
     3. Raisable exceptions:
@@ -82,7 +83,7 @@ To uninstall:
        * `NoSuchResource` on missing resource
        * `LockedError` on resource in use
 
-Any other raised exception will be handled as a generic server error.
+Any other exception will be handled as a generic server error.
 
 ### FILTERING
 
@@ -98,10 +99,10 @@ REST Implementation
 
   * Selection: `GET /<resources>?[offset=0][&limit=100][&fields=][&key=value]…`
     - On success:
-      * returns **200**, **204** or **206**.
-      * set the header `Content-Range`
-      * set the header `Accept-Range`
-  * Creation: `POST /<resources>` and `body` contains the payload.
+      * returns **200** or **206**.
+      * set the header `Content-Range: lbound-ubound/max`
+      * set the header `Accept-Range: <resource> max`
+  * Creation: `POST /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
     - On success:
       * returns **201** or **202**.
       * set the header `Location`

@@ -170,7 +170,7 @@ class Server(object):
 					rows)
 			count = len(resources)
 			return self.Success(
-				rows,
+				result = rows,
 				status = 200 if limit >= count else 206,
 				headers = {
 					"Content-Range": "%i-%i/%i" % (offset, offset + limit, count),
@@ -192,7 +192,7 @@ class Server(object):
 		elif content_type == "application/xml":
 			return xml.loads(bottle.request.body.read())
 		else:
-			raise FormatError("%s: unsupported input content-type" % content_type)
+			raise FormatError(content_type, "unsupported input content-type")
 
 	def create(self, resources):
 		try:
@@ -203,9 +203,8 @@ class Server(object):
 			return self.Failure(exc, status = 422)
 		try:
 			result, querystring, asynchronous = resources.create(body)
-			assert result, "create result cannot be null"
 			return self.Success(
-				result,
+				result = result,
 				status = 202 if asynchronous else 201,
 				headers = {"Location": "%s?%s" % (bottle.request.url, querystring)})
 		except NotImplementedError as exc:
@@ -227,8 +226,9 @@ class Server(object):
 		except Exception as exc:
 			return self.Failure(exc, status = 422)
 		try:
-			result = resources.update(body)
-			return self.Success(result, status = 200 if result else 204)
+			return self.Success(
+				result = resources.update(body),
+				status = 200 if result else 204)
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
@@ -250,8 +250,9 @@ class Server(object):
 		except Exception as exc:
 			return self.Failure(exc, status = 422)
 		try:
-			result = model.delete(body)
-			return self.Success(result, status = 200 if result else 204)
+			return self.Success(
+				result = model.delete(body),
+				status = 200 if result else 204)
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
