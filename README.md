@@ -43,51 +43,49 @@ To uninstall:
 
 ### RESOURCES INTERFACE
 
-  * `select(limit, offset, fields, **kwargs)`
-    1. returns an iterable object that will be encoded as the response body.
-    2. the parameters `limit` (which defaults to 100) and `offset` allow to control pagination.
-    3. `fields` allow to select a subset of result columns. 
-  * `create(body)`
-    1. returns a tuple `(body, querystring, asynchronous)`
-    2. querystring: used to build the response `Location` header, e.g. `?id=1`
-    3. asynchronous: if True, use 202 as response status code, 201 otherwise
-  * `update(body)`
-    1. Returns an object that will be encoded as the response body.
-  * `delete(body)`
-    1. Returns an object that will be encoded as the response body.
+  * Method `select(limit[=100], offset[=0], fields, **kwargs)`:
+    1. Returns an iterable object that will be encoded as the response body.
+    2. The parameters `limit` and `offset` allow to control pagination.
+    3. `fields` allow to select a subset of result columns.
+    4. Raisable exceptions:
+       * `NotImplementedError` if a method or a part of it is not implemented
+       * `MethodNotAllowed` if the method is not allowed
+       * `ValidationError` on an invalid input
+  * Method `create(body)`:
+    1. `body` is the decoded request body.
+    2. Returns a tuple `(body, querystring, asynchronous)`
+    3. `querystring` is used to build the response `Location` header.
+    4. `asynchronous`, a boolean. If set, returns 202, otherwise 201.
+    5. Raisable exceptions:
+       * `NotImplementedError` if a method or a part of it is not implemented
+       * `MethodNotAllowed` if the method is not allowed
+       * `ValidationError` on an invalid input
+       * `ResourceExists` on resource conflict
+  * Method `update(body)`:
+    1. `body` is the decoded request body.
+    2. Returns an object that will be encoded as the response body.
+    3. Raisable exceptions:
+       * `NotImplementedError` if a method or a part of it is not implemented
+       * `MethodNotAllowed` if the method is not allowed
+       * `ValidationError` on an invalid input
+       * `NoSuchResource` on missing resource
+       * `LockedError` on resource in use
+  * Method `delete(body)`:
+    1. `body` is the decoded request body.
+    2. Returns an object that will be encoded as the response body.
+    3. Raisable exceptions:
+       * `NotImplementedError` if a method or a part of it is not implemented
+       * `MethodNotAllowed` if the method is not allowed
+       * `ValidationError` on an invalid input
+       * `NoSuchResource` on missing resource
+       * `LockedError` on resource in use
+
+Any other raised exception will be handled as 500.
 
 ### FILTERING
 
 For performance reasons, the `.select()` implementation is expected to handle the filtering.
-However, if this is not done, you can enable post-filtering when instantiating the server.
-
-### EXCEPTIONS
-
-For a proper handling of the HTTP status codes:
-
-  * `select()` must raise:
-    * `NotImplementedError` if a method or a part of it is not implemented
-    * `MethodNotAllowed` if the method is not allowed
-    * `ValidationError` on an invalid input
-  * `create()` must raise:
-    * `NotImplementedError` if a method or a part of it is not implemented
-    * `MethodNotAllowed` if the method is not allowed
-    * `ValidationError` on an invalid input
-    * `ResourceExists` on resource conflict
-  * `update()` must raise:
-    * `NotImplementedError` if a method or a part of it is not implemented
-    * `MethodNotAllowed` if the method is not allowed
-    * `ValidationError` on an invalid input
-    * `NoSuchResource` on missing resource
-    * `LockedError` on resource in use
-  * `delete()` must raise:
-    * `NotImplementedError` if a method or a part of it is not implemented
-    * `MethodNotAllowed` if the method is not allowed
-    * `ValidationError` on an invalid input
-    * `NoSuchResource` on missing resource
-    * `LockedError` on resource in use
-
-Any other exception will be handled as 500.
+However, if this is not done, you can enable `post-filtering` when instantiating the server.
 
 
 REST Implementation
@@ -95,13 +93,11 @@ REST Implementation
 
 ### HTTP CRUD
 
-  * Selection:
-    `GET /<resources>?[offset=][&limit=100][&fields=][&key=value]…`;
-    NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
-    Expect 200 on success.
-    Any additional pair key=value is considered to be an exact matching.
-  * Creation:
-    `POST /<resources>` and `body` contains the payload.
+  * Selection: `GET /<resources>?[offset=][&limit=100][&fields=][&key=value]…`
+    1. NOTICE! GET has a default limit of 100 to prevent unwanted DDOS.
+    2. Expect 200 on success.
+    3. Any additional pair key=value is considered to be an exact matching.
+  * Creation: `POST /<resources>` and `body` contains the payload.
     On successful creation, the response `Location` header is set.
     Expect 201 (or 202 if async) on success.
   * Update: `PUT /<resources>` and `body` contains the payload;

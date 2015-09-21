@@ -4,19 +4,32 @@ import json, abc
 
 import bottle # 3rd-party
 
-class LockedResourceError(Exception): pass
+##############
+# exceptions #
+##############
 
-class MethodNotAllowed(Exception): pass
+class Error(Exception):
 
-class ValidationError(Exception): pass
+	def __str__(self):
+		return ": ".join(map(str, self.args))
 
-class NoSuchResource(Exception): pass
+class SyntaxError(Error): pass
 
-class ResourceExists(Exception): pass
+class FormatError(Error): pass
 
-class FormatError(Exception): pass
+class ResourceExists(Error): pass
 
-class SyntaxError(Exception): pass
+class NoSuchResource(Error): pass
+
+class ValidationError(Error): pass
+
+class MethodNotAllowed(Error): pass
+
+class LockedResourceError(Error): pass
+
+#############
+# interface #
+#############
 
 class Resources(object):
 
@@ -36,6 +49,10 @@ class Resources(object):
 
 	@abc.abstractmethod
 	def __len__(self): pass
+
+##################
+# implementation #
+##################
 
 class xml:
 	"poorman xml serializer"
