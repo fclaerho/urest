@@ -93,18 +93,18 @@ REST Implementation: Client's Guide
 
 ### HTTP CRUD
 
-  * Selection: `GET /<resources>?[offset=…][&limit=…][&fields=…][&key=value]…`
+  * Selection: `GET /<resources>?[offset=…][&limit=…][&fields=…][&key=value]… HEADERS {["Accept":…], …}`
     - On success:
       * returns **200** or **206** on a partial content.
       * set the header `Content-Range: resource <offset>-<offset+limit>/<count>`
       * set the header `Accept-Range: resource`
-  * Creation: `POST /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
+  * Creation: `POST /<resources> HEADERS {"Content-Type": …, ["Accept": …], …} BODY …`
     - On success:
       * returns **201** or **202** on an asynchronous operation.
       * set the header `Location: <resource_url>`
-  * Update: `PUT /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
+  * Update: `PUT /<resources> HEADERS {"Content-Type": …, ["Accept": …], …} BODY …`
     - On success, returns **200** or **204** if there's no response body.
-  * Deletion: `DELETE /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
+  * Deletion: `DELETE /<resources> HEADERS {"Content-Type": …, ["Accept": …], …} BODY …`
     - On success, returns **200** or **204** if there's no response body.
 
 ### HTTP STATUS CODES
