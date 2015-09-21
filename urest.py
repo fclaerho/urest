@@ -1,7 +1,7 @@
 # copyright (c) 2014-2015 fclaerhout.fr, released under the MIT license.
 # coding: utf-8
 
-import xml.etree.ElementTree as ET, json, abc
+import xml.etree.ElementTree as ET, json, yaml, abc
 
 import bottle # 3rd-party
 
@@ -112,14 +112,15 @@ class Server(object):
 		# according to the combined Accept field value, then the server SHOULD send
 		# a 406 (not acceptable) response.
 		accepted_ct = bottle.request.headers.get("Accept")
-		for ct, serialize in (
+		for ct, dump in (
 			("application/json", lambda obj: json.dumps(obj, cls = self.json_encoder_cls)),
+			("application/yaml", yaml.dump),
 			("application/xml", xml.dumps)):
 			if accepted_ct in (None, ct): 
 				bottle.response.status = status
 				bottle.response.headers.update(headers)
 				bottle.response.content_type = ct
-				return serialize(obj)
+				return dump(obj)
 		else:
 			bottle.response.status = 406
 			return None
@@ -188,12 +189,12 @@ class Server(object):
 						"Content-Range": "resource %i-%i/%i" % (offset, offset + limit, count),
 						"Accept-Range": "resource",
 					})
-		except ValidationError as exc:
-			return self.Failure(exc, status = 400)
 		except MethodNotAllowed as exc:
 			return self.Failure(exc, status = 405)
 		except RangeNotSatisfiable as exc:
 			return self.Failure(exc, status = 416)
+		except ValidationError as exc:
+			return self.Failure(exc, status = 422)
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)
 		except Exception as exc:
@@ -202,10 +203,12 @@ class Server(object):
 	def parse_body(self):
 		"return parsed object on success, raise FormatError or SyntaxError on failure"
 		content_type = bottle.request.headers.get("Content-Type")
-		if content_type == "application/json":
-			return json.loads(bottle.request.body.read())
-		elif content_type == "application/xml":
-			return xml.loads(bottle.request.body.read())
+		for ct, load in (
+			("application/json", json.loads),
+			("application/yaml", yaml.load),
+			("application/xml", xml.loads)):
+			if content_type == ct:
+				return load(bottle.request.body.read())
 		else:
 			raise FormatError(content_type, "unsupported input content-type")
 
@@ -215,7 +218,7 @@ class Server(object):
 		except FormatError as exc:
 			return self.Failure(exc, status = 415)
 		except Exception as exc:
-			return self.Failure(exc, status = 422)
+			return self.Failure(exc, status = 400)
 		try:
 			result, querystring, asynchronous = resources.create(body)
 			return self.Success(
@@ -239,7 +242,7 @@ class Server(object):
 		except FormatError as exc:
 			return self.Failure(exc, status = 415)
 		except Exception as exc:
-			return self.Failure(exc, status = 422)
+			return self.Failure(exc, status = 400)
 		try:
 			return self.Success(
 				result = resources.update(body),
@@ -263,7 +266,7 @@ class Server(object):
 		except FormatError as exc:
 			return self.Failure(exc, status = 415)
 		except Exception as exc:
-			return self.Failure(exc, status = 422)
+			return self.Failure(exc, status = 400)
 		try:
 			return self.Success(
 				result = model.delete(body),

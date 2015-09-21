@@ -16,7 +16,10 @@ Server Side: API Developer's Guide
 		def select(self, *args, **kwargs):
 			return self.memdb
 		def create(self, body):
-			self.memdb.append({"name": body["name"], "position": body["position"]})
+			try:
+				self.memdb.append({"name": body["name"], "position": body["position"]})
+			except KeyError as exc:
+				raise urest.ValidationError(exc)
 			return None, "name=%s" % body["name"], False
 		def update(self, body):
 			raise urest.MethodNotAllowed
@@ -124,7 +127,7 @@ Client Side: REST Implementation
     * **409**: Conflict — the resource already exists
     * **415**: Unsupported Media Type — unsupported input formats (Content-Type header)
     * **416**: Range Not Satisfiable
-    * **422**: Unprocessable Entity — request input is invalid
+    * **422**: Unprocessable Entity — request input is semantically invalid
     * **423**: Locked — the resource is in use and cannot be updated/deleted
   * On internal error:
     * **501**: Not Implemented
