@@ -91,17 +91,33 @@ class xml:
 	def dumps(cls, obj):
 		return "<?xml version='1.0'?>\n%s" % cls._object_to_xml(obj)
 
+	class XMLDict(object):
+
+		def __init__(self, elem):
+			self.elem = elem
+
+		def __iter__(self):
+			return (child.tag for child in self.elem)
+
+		def values(self):
+			return (XMLDict(child) for child in self.elem)
+
+		def items(self):
+			return ((child.tag, XMLDict(child)) for child in self.elem)
+
+		def keys(self):
+			return (child.tag for child in self.elem)
+
 	@classmethod
 	def loads(cls, string):
-		return XMLList(ET.fromstring(string)) # FIXME
+		return XMLDict(ET.fromstring(string)) # FIXME
 
 class Server(object):
 
-	def __init__(self, json_encoder_cls = None, post_filtering = False, hostname = "0.0.0.0", limit = 100, port = 8080):
+	def __init__(self, json_encoder_cls = None, post_filtering = False, hostname = "0.0.0.0", port = 8080):
 		self.json_encoder_cls = json_encoder_cls
 		self.post_filtering = post_filtering
 		self.hostname = hostname
-		self.limit = limit # limit on GET to prevent unwanted DDOS
 		self.port = port
 
 	def _Response(self, obj, status, headers):
@@ -144,12 +160,13 @@ class Server(object):
 			# parse query string:
 			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
 			offset = 0
-			limit = self.limit 
+			limit = None 
 			kwargs = {}
 			for key, value in bottle.request.query.items():
 				if key == "range": # shortcut
 					offset, ubound = value.split("-")
-					limit = ubound - offset
+					if ubound:
+						limit = ubound - offset
 				elif key == "limit":
 					limit = int(value)
 				elif key == "offset":

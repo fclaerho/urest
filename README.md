@@ -127,7 +127,7 @@ Client Side: REST Implementation
     * **409**: Conflict — the resource already exists
     * **415**: Unsupported Media Type — unsupported input formats (Content-Type header)
     * **416**: Range Not Satisfiable
-    * **422**: Unprocessable Entity — request input is semantically invalid
+    * **422**: Unprocessable Entity — request input syntax is correct but semantically invalid
     * **423**: Locked — the resource is in use and cannot be updated/deleted
   * On internal error:
     * **501**: Not Implemented
