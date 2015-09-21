@@ -57,61 +57,6 @@ class Resources(object):
 # implementation #
 ##################
 
-class xml:
-	"poorman xml serializer"
-
-	@classmethod
-	def _list_to_xml(cls, obj):
-		body = "\n".join(map(lambda value: "<value>%s</value>" % cls._object_to_xml(value), obj))
-		return "<list>%s</list>" % body
-
-	@classmethod
-	def _dict_to_xml(cls, obj):
-		body = "\n".join(map(lambda key: "<value name='%s'>%s</value>" % (key, cls._object_to_xml(obj[key])), obj))
-		return "<dict>%s</dict>" % body
-
-	@classmethod
-	def _object_to_xml(cls, obj):
-		if obj is None:
-			return "<None/>"
-		elif isinstance(obj, (str, unicode)):
-			return ("<str>%s</str>" % obj)
-		elif isinstance(obj, (int, float)):
-			return ("<number>%s</number>" % obj)
-		elif isinstance(obj, bool):
-			return ("<bool>%s</bool>" % obj)
-		elif isinstance(obj, (list, tuple)):
-			return cls._list_to_xml(obj)
-		elif isinstance(obj, dict):
-			return cls._dict_to_xml(obj)
-		else:
-			raise NotImplementedError("%s: unsupported type" % type(obj).__name__)
-
-	@classmethod
-	def dumps(cls, obj):
-		return "<?xml version='1.0'?>\n%s" % cls._object_to_xml(obj)
-
-	class XMLDict(object):
-
-		def __init__(self, elem):
-			self.elem = elem
-
-		def __iter__(self):
-			return (child.tag for child in self.elem)
-
-		def values(self):
-			return (XMLDict(child) for child in self.elem)
-
-		def items(self):
-			return ((child.tag, XMLDict(child)) for child in self.elem)
-
-		def keys(self):
-			return (child.tag for child in self.elem)
-
-	@classmethod
-	def loads(cls, string):
-		return XMLDict(ET.fromstring(string)) # FIXME
-
 class Server(object):
 
 	def __init__(self, json_encoder_cls = None, post_filtering = False, hostname = "0.0.0.0", limit = 100, port = 8080):
@@ -131,7 +76,7 @@ class Server(object):
 		for ct, dump in (
 			("application/json", lambda obj: json.dumps(obj, cls = self.json_encoder_cls)),
 			("application/yaml", yaml.dump),
-			("application/xml", xml.dumps)):
+			("application/xml", ET.dump)):
 			if accepted_ct in (None, ct): 
 				bottle.response.status = status
 				bottle.response.headers.update(headers)
@@ -175,11 +120,13 @@ class Server(object):
 					fields = value.split(",")
 				else:
 					kwargs[key] = value
+			# fetch results:
 			rows = resources.select(
 				limit = limit,
 				offset = offset,
 				fields = fields,
 				**kwargs)
+			# do filtering if not supported natively:
 			if self.post_filtering:
 				# select range of rows:
 				if offset:
@@ -197,8 +144,10 @@ class Server(object):
 					rows)
 			count = len(resources)
 			if limit <= count:
+				# full content:
 				return self.Success(rows)
 			else:
+				# partial content:
 				return self.Success(
 					result = rows,
 					status = 206,

@@ -126,7 +126,7 @@ Client Side: REST Implementation
     * **406**: Not Acceptable — unsupported output formats (Accept header)
     * **409**: Conflict — the resource already exists
     * **415**: Unsupported Media Type — unsupported input formats (Content-Type header)
-    * **416**: Range Not Satisfiable
+    * **[416](http://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7233.html#status.416)**: Range Not Satisfiable
     * **422**: Unprocessable Entity — request input syntax is correct but semantically invalid
     * **423**: Locked — the resource is in use and cannot be updated/deleted
   * On internal error:
