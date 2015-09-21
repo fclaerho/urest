@@ -114,7 +114,7 @@ class xml:
 
 class Server(object):
 
-	def __init__(self, json_encoder_cls = None, post_filtering = False, hostname = "0.0.0.0", port = 8080):
+	def __init__(self, json_encoder_cls = None, post_filtering = False, hostname = "0.0.0.0", limit = 100, port = 8080):
 		self.json_encoder_cls = json_encoder_cls
 		self.post_filtering = post_filtering
 		self.hostname = hostname
@@ -160,7 +160,7 @@ class Server(object):
 			# parse query string:
 			fields = bottle.request.query.fields.split(",") if bottle.request.query.fields else ()
 			offset = 0
-			limit = None 
+			limit = self.limit 
 			kwargs = {}
 			for key, value in bottle.request.query.items():
 				if key == "range": # shortcut
