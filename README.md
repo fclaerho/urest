@@ -145,6 +145,8 @@ In JSON (equivalent in XML):
 
 ### SECURITY 
 
+RFC 7233 §6.1 — Denial-of-Service Attacks Using Range
+
 > Unconstrained multiple range requests are susceptible to denial-of-service
 > attacks because the effort required to request many overlapping ranges of
 > the same data is tiny compared to the time, memory, and bandwidth consumed
@@ -153,7 +155,6 @@ In JSON (equivalent in XML):
 > more than two overlapping ranges or for many small ranges in a single set,
 > particularly when the ranges are requested out of order for no apparent
 > reason. Multipart range requests are not designed to support random access.
-> — RFC 7233 §6.1 — Denial-of-Service Attacks Using Range
 
 According to this **Urest** doesn't prevent a request to fetch all resources.
 
