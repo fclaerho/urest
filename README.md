@@ -84,8 +84,8 @@ Any other exception will be handled as a generic server error.
 ### FILTERING
 
 For performance reasons, the `.select()` implementation is expected to handle the filtering,
-that is the `offset`, `limit` and `fields` constraints.
-However, you can also enable `post-filtering` when instantiating the server and let it do this work.
+that is the `offset`, `limit`, `fields` and `kwargs` constraints.
+You can also let the server do this work by setting the `post-filtering` flag.
 
 
 REST Implementation: Client's Guide
@@ -96,12 +96,12 @@ REST Implementation: Client's Guide
   * Selection: `GET /<resources>?[offset=0][&limit=100][&fields=][&key=value]…`
     - On success:
       * returns **200** or **206** on a partial content.
-      * set the header `Content-Range: lbound-ubound/max`
-      * set the header `Accept-Range: <resource> max`
+      * set the header `Content-Range: resource <offset>-<offset+limit>/<count>`
+      * set the header `Accept-Range: resource`
   * Creation: `POST /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
     - On success:
       * returns **201** or **202** on an asynchronous operation.
-      * set the header `Location`
+      * set the header `Location: <resource_url>`
   * Update: `PUT /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
     - On success, returns **200** or **204** if there's no response body.
   * Deletion: `DELETE /<resources> HEADERS {"Content-Type": …, "Accept": …} BODY …`
@@ -116,11 +116,13 @@ REST Implementation: Client's Guide
     * **206**: Partial Content — a part of the content has been returned, i.e. paging on GET
     * otherwise **200**: OK — returned if no specific 2xx status code fits
   * On request error:
+    * **400**: Bad Request
     * **404**: Not Found — no such resource
     * **405**: Method Not Allowed - http method not allowed on the resource
     * **406**: Not Acceptable — unsupported output formats (Accept header)
     * **409**: Conflict — the resource already exists
     * **415**: Unsupported Media Type — unsupported input formats (Content-Type header)
+		* **416**: Range Not Satisfiable
     * **422**: Unprocessable Entity — request input is invalid
     * **423**: Locked — the resource is in use and cannot be updated/deleted
   * On internal error:
@@ -140,6 +142,21 @@ On request:
 In JSON (equivalent in XML):
   * On success: `{"success": true, "result": <object>}`
   * On failure: `{"success": false, "exception": <string>}`
+
+### SECURITY 
+
+From RFC 7233 §6.1 — Denial-of-Service Attacks Using Range
+
+> Unconstrained multiple range requests are susceptible to denial-of-service
+> attacks because the effort required to request many overlapping ranges of
+> the same data is tiny compared to the time, memory, and bandwidth consumed
+> by attempting to serve the requested data in many parts. Servers ought to
+> ignore, coalesce, or reject egregious range requests, such as requests for
+> more than two overlapping ranges or for many small ranges in a single set,
+> particularly when the ranges are requested out of order for no apparent
+> reason. Multipart range requests are not designed to support random access.
+
+According to this **Urest** doesn't prevent a request to fetch all resources.
 
 
 References

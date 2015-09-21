@@ -1,4 +1,5 @@
 # copyright (c) 2014-2015 fclaerhout.fr, released under the MIT license.
+# coding: utf-8
 
 import json, abc
 
@@ -24,6 +25,8 @@ class NoSuchResource(Error): pass
 class ValidationError(Error): pass
 
 class MethodNotAllowed(Error): pass
+
+class RangeNotSatisfiable(Error): pass
 
 class LockedResourceError(Error): pass
 
@@ -103,17 +106,22 @@ class Server(object):
 
 	def _Response(self, obj, status, headers):
 		"configure bottle response and return data"
+		# RFC 2616 §14.1: If no Accept header field is present, then is is assumed
+		# that the client accepts all media types. […]
+		# If an Accept header field is present, and if the server cannot send a
+		# response which is acceptable according to the combined Accept field value,
+		# then the server SHOULD send a 406 (not acceptable) response.
 		accepted_ct = bottle.request.headers.get("Accept")
 		for ct, serialize in (
 			("application/json", lambda obj: json.dumps(obj, cls = self.json_encoder_cls)),
 			("application/xml", xml.dumps)):
-			if not accepted_ct or accepted_ct == ct:
+			if accepted_ct in (None, ct): 
 				bottle.response.status = status
 				bottle.response.headers.update(headers)
 				bottle.response.content_type = ct
 				return serialize(obj)
 		else:
-			bottle.response.status = 406 # unsupported Accept content type
+			bottle.response.status = 406
 			return None
 
 	def Success(self, result = None, status = 200, headers = None, **kwargs):
@@ -146,8 +154,6 @@ class Server(object):
 					fields = value.split(",")
 				else:
 					kwargs[key] = value
-			if limit > self.limit:
-				raise ValidationError("limit out of bound")
 			rows = resources.select(
 				limit = limit,
 				offset = offset,
@@ -169,19 +175,24 @@ class Server(object):
 					lambda row: {key: value for key,value in row.items() if not fields or key in fields},
 					rows)
 			count = len(resources)
-			return self.Success(
-				result = rows,
-				status = 200 if limit >= count else 206,
-				headers = {
-					"Content-Range": "%i-%i/%i" % (offset, offset + limit, count),
-					"Accept-Range": "%s %i" % ("not_implemented", self.limit),
-				})
+			if limit < count:
+				return self.Success(rows)
+			else:
+				return self.Success(
+					result = rows,
+					status = 206,
+					headers = {
+						"Content-Range": "resource %i-%i/%i" % (offset, offset + limit, count),
+						"Accept-Range": "resource",
+					})
 		except NotImplementedError as exc:
 			return self.Failure(exc, status = 501)
 		except MethodNotAllowed as exc:
 			return self.Failure(exc, status = 405)
 		except ValidationError as exc:
 			return self.Failure(exc, status = 400)
+		except RangeNotSatisfiable as exc:
+			return self.Failure(exc, status = 416)
 		except Exception as exc:
 			return self.Failure(exc, status = 500)
 

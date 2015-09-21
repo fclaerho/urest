@@ -1,13 +1,13 @@
 # copyright (c) 2015 fclaerhout.fr, released under the MIT license.
 
-import unittest, json, time
+import unittest, json, re
 
 import bottle, urest, fckit # 3rd-party
 
 MSG = ["Hello, World!", "blah", "lorem ipsum"]
 DATA = [{"id": i, "msg": MSG[min(i, len(MSG) - 1)]} for i in xrange(200)]
 
-class Hello(urest.Resources):
+class Messages(urest.Resources):
 
 	def select(self, **kwargs):
 		return DATA
@@ -24,13 +24,14 @@ class Hello(urest.Resources):
 	def __len__(self):
 		return len(DATA)
 
+PATH = "/messages"
 PORT = 12345
 
 class Test(unittest.TestCase):
 
 	def setUp(self):
-		server = urest.Server(port = PORT, filtering = True)
-		server.register("/hello", Hello())
+		server = urest.Server(port = PORT, post_filtering = True)
+		server.register(PATH, Messages())
 		self.process = fckit.async(server.run, threaded = False)
 
 	def tearDown(self):
@@ -42,8 +43,16 @@ class Test(unittest.TestCase):
 			port = PORT,
 			method = "GET",
 			headers = {"Accept": "application/json"},
-			path = "/hello%s" % (querystring or ""))  
-		self.assertEqual(res.status, 206)
+			path = "%s%s" % (PATH, querystring or ""))  
+		self.assertIn(res.status, (200, 206))
+		if res.status == 206:
+			content_range = res.getheader("Content-Range")
+			lbound, ubound, count = map(int, re.match(r"(\d+)-(\d+)/(\d+)", content_range).groups())
+			self.assertLessEqual(lbound, ubound)
+			self.assertLessEqual(ubound, count)
+			accept_range = res.getheader("Accept-Range")
+			name, maxcount = re.match(r"(\w+) (\d+)", accept_range).groups()
+			maxcount = int(maxcount)
 		return json.loads(res.read())
 
 	def test_get_default_limit(self):
