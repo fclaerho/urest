@@ -91,7 +91,8 @@ Client Side: REST Implementation
 ### HTTP CRUD
 
   * Selection: `GET /<resources>?[range=…][offset=…][&limit=…][&fields=…][&key=value]… HEADERS {["Accept":…], …}`
-    - You may use `range` (x-y, -y, x-) OR `offset`+`limit` for paging
+    - Paging is supported both via querystring and range requests (RFC 7233, `Range` header.)
+    - For querystring paging, you may use `range` (x-y, -y, x-) OR `offset`+`limit` for paging
     - On success:
       * returns **200** or **206** on a partial content.
       * set the header `Content-Range: resource <offset>-<offset+limit>/<count>`
@@ -117,9 +118,9 @@ Client Side: REST Implementation
     * **400**: Bad Request
     * **404**: Not Found — no such resource
     * **405**: Method Not Allowed - http method not allowed on the resource
-    * **406**: Not Acceptable — unsupported output formats (Accept header)
+    * **406**: Not Acceptable — unsupported output formats (`Accept` header)
     * **409**: Conflict — the resource already exists
-    * **415**: Unsupported Media Type — unsupported input formats (Content-Type header)
+    * **415**: Unsupported Media Type — unsupported input formats (`Content-Type` header)
     * **[416](http://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7233.html#status.416)**: Range Not Satisfiable
     * **422**: Unprocessable Entity — request input syntax is correct but semantically invalid
     * **423**: Locked — the resource is in use and cannot be updated/deleted
