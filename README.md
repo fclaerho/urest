@@ -128,7 +128,7 @@ Client Side: REST Implementation
     * **501**: Not Implemented
     * otherwise **500**: Internal Server Error
 
-### I/O FORMAT
+### I/O FORMAT
 
 3 body formats are supported: `application/json`, `application/yaml` and `application/xml`.
 
